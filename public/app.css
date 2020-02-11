@@ -4,6 +4,16 @@ body {
   overflow: hidden;
 }
 
+#title {
+   color: #FF7F15;
+}
+
+.homepage-container{
+   margin-left: 20%;
+   margin-right: 20%;
+  
+}
+
 .navbar-inverse {
    background-color: #222;
    border-color: #080808;
@@ -53,3 +63,4 @@ body {
    background-color: #FF7F15;
    border-color: #FF7F15;
 }
+

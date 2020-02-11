@@ -7,6 +7,8 @@ const passport = require("passport");
 
 const app = express();
 
+
+// gets the static content in the public folder
 app.use('/public',express.static('public'));
 
 //Passport require
