@@ -1,5 +1,5 @@
 {
-  "name": "node_passport_login",
+  "name": "celavent",
   "version": "1.0.0",
   "description": "",
   "main" : "app.js",
@@ -8,7 +8,7 @@
     "dev":"nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Yash Patel",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
