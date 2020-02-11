@@ -7,6 +7,8 @@ const passport = require("passport");
 
 const app = express();
 
+app.use('/public',express.static('public'));
+
 //Passport require
 require('./config/passport')(passport);
 
