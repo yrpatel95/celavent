@@ -1,7 +1,6 @@
 body {
   margin: 0px;
   padding: 0px;
-  overflow: hidden;
 }
 
 #title {
@@ -64,3 +63,8 @@ body {
    border-color: #FF7F15;
 }
 
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+   color: #fff;
+   background-color: #FF7F15;
+   border-color: #FF7F15; /*set the color you want here*/
+}
