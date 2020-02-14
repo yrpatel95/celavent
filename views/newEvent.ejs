@@ -1,0 +1,74 @@
+<div class="container">
+    <div class="row" style="text-align:center">
+        <div class="col-md-12">
+            <h1>Create a New Event</h1>
+            <form action="/signup" method="POST">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Passowrd" name="password" required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Passowrd" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Event Name" name="eventName" required>
+                </div>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()" checked>Multi-Day Event
+                    </label>
+                    <label class="radio-inline">
+                        <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()">Single Day Event
+                    </label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="string" placeholder="Venue Name" name="venueName" required>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" type="string" placeholder="City" name="venueCity" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" type="string" placeholder="state" name="venueState" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="number" placeholder="Budget" name="budget">
+                </div>
+                
+               
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
+                </div>
+            </form>
+            <a class="btn btn-default btn-lg btn-block" href="/">Go Back</a>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function myFunction() {
+  var endDate = document.getElementById("endDate");
+  if (endDate.style.display === "none") {
+    endDate.style.display = "block";
+  } else {
+    endDate.style.display = "none";
+  }
+}
+</script>
