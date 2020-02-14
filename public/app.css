@@ -68,3 +68,14 @@ body {
    background-color: #FF7F15;
    border-color: #FF7F15; /*set the color you want here*/
 }
+
+.newEventHeader{
+   margin-top: 5%;
+}
+
+label {
+   display: inline-block;
+   margin-bottom: 0.5rem;
+   margin-right: 5%;
+   ALIGN-CONTENT: left;
+}
