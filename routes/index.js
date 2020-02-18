@@ -4,21 +4,6 @@ const Event = require('../models/event');
 const { ensureAuthenticated } = require('../config/auth');
 
 
-var clientList = [
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" },
-    { eventName: "Nidhi & Yash", image: "https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60", venueName: "Hyatt Regency Chesapeake Bay", venueCity: "Cambridge", venueState: "MD", budget: "10000", eventLenght: "Multi-Day Event", startDate: "May 28,2021", endDate: "May 30,2021" }
-];
 
 // Welcome Page
 router.get('/', (req, res) => res.render('home'));
@@ -27,10 +12,24 @@ router.get('/', (req, res) => res.render('home'));
 router.get('/welcome', (req, res) => res.render('welcome'));
 
 // Dashboard Page
-router.get('/dashboard', ensureAuthenticated, (req, res) => res.render('dashboard', {
-    name: req.user.name,
-    clients: clientList
-}));
+
+
+router.get('/dashboard', ensureAuthenticated,(req, res) => {
+    Event.find({},{},function(err,eventList){
+        if(err){
+            console.log("Error recieving the client list");
+            console.log(err);
+        } else {
+             console.log(eventList);
+            res.render('dashboard', {
+                name: req.user.name,
+                clients: eventList
+            })
+        }
+    });
+    
+    
+});
 
 
 
@@ -65,10 +64,12 @@ router.post('/newEvent', (req, res) => {
 
     newEvent.save()
         .then(user => {
-            req.flash('success_msg', 'You are now registered! Please login!');
-            res.send("<h1>HELLO</h1>");
+            req.flash('success_msg', 'You have added a new event!');
+            res.redirect('/dashboard')
         })
         .catch(err => console.log(err));
+
+       
 
 });
 
