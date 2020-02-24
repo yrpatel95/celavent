@@ -19,10 +19,14 @@
             <a class="navbar-brand" href="/">Celavent</a>
             <a class="navbar-brand" href="/clientList">Client List</a>
           </div>
+          
           <div class="nav navbar-brand">
-            <a class="navbar-brand" href="/users/register">Sign Up</a>
-            <a class="navbar-brand" href="/users/login">Login</a>
-            <a class="navbar-brand" href="/users/logout">Logout</a>
+            <% if(isAuthenticated == false){ %>
+              <a class="navbar-brand" href="/users/register">Sign Up</a>
+              <a class="navbar-brand" href="/users/login">Login</a>
+            <%} else { %>
+              <a class="navbar-brand" href="/users/logout">Logout</a>
+            <%} %>
           </div>
         </div>
     </nav>

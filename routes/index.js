@@ -15,14 +15,14 @@ router.get('/welcome', (req, res) => res.render('welcome'));
 
 
 router.get('/dashboard', ensureAuthenticated,(req, res) => {
-    Event.find({},{},function(err,eventList){
+    Event.find({userEmail: req.user.email},{},function(err,eventList){
         if(err){
             console.log("Error recieving the client list");
             console.log(err);
         } else {
-             console.log(eventList);
+             //console.log(eventList);
             res.render('dashboard', {
-                name: req.user.name,
+                name: req.user.email,
                 clients: eventList
             })
         }
@@ -34,11 +34,11 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
 
 
 //Create New Event Page
-router.get('/newEvent', (req, res) => res.render('newEvent'));
+router.get('/newEvent', ensureAuthenticated, (req, res) => res.render('newEvent',{userEmail:req.user.email}));
 
 //Post from New Event Page
-router.post('/newEvent', (req, res) => {
-
+router.post('/newEvent', ensureAuthenticated, (req, res) => {
+    console.log("useremail: " + req.user.email);
     var eventName = req.body.eventName;
     var startDate = req.body.startDate;
     var endDate = req.body.endDate;
@@ -47,6 +47,7 @@ router.post('/newEvent', (req, res) => {
     var venueState = req.body.venueState;
     var budget = req.body.budget;
     var eventLength = req.body.eventLength;
+    var userEmail = req.user.email;
 
 
     var newEvent = new Event({
@@ -57,8 +58,10 @@ router.post('/newEvent', (req, res) => {
         venueCity: venueCity,
         eventLength: eventLength,
         venueState: venueState,
-        budget: budget
+        budget: budget,
+        userEmail: userEmail
     });
+
 
     console.log(newEvent);
 

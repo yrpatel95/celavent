@@ -35,6 +35,10 @@ const EventSchema = new mongoose.Schema({
     endDate: {
         type: String,
         required: false
+    },
+    userEmail: {
+        type: String,
+        required: true
     }
 
 
