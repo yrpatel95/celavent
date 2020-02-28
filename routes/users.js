@@ -14,8 +14,11 @@ router.get('/register', (req, res) => res.render('register'));
 
 // Register Handle
 router.post('/register', (req, res)=> {
-    const {name, email, password, password2} = req.body;
+    var {name, email, password, password2, userType, vendorServiceList} = req.body;
     let errors = [];
+
+    
+
 
     //check required fields
     if(!name || !email || !password || !password2){
@@ -23,6 +26,13 @@ router.post('/register', (req, res)=> {
             msg: "Please fill in all fields"
         });
     }
+
+    // //check required fields
+    // if(userType && !photographyCB && !videographyCB && !musicCB & !foodCB){
+    //     errors.push({
+    //         msg: "Please select services offered"
+    //     });
+    // }
 
     //Check passwords match
     if(password != password2){
@@ -44,7 +54,8 @@ router.post('/register', (req, res)=> {
             name,
             email,
             password,
-            password2
+            password2,
+            vendorServiceList
         });
     } else {
         //Validation passed
@@ -58,13 +69,23 @@ router.post('/register', (req, res)=> {
                         name,
                         email,
                         password,
-                        password2
+                        password2,
+                        vendorServiceList
                     });
                 } else {
+                    
+                    if(userType!= "Host"){
+                        userType = "vendor";
+                    } else {
+                        userType = "host";
+                    }
+
                     const newUser = new User({
                         name,
                         email,
-                        password
+                        password,
+                        userType,
+                        vendorServiceList
                     });
 
                     //Hash password
