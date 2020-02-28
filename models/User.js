@@ -12,9 +12,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date:{
-        type: Date,
-        default: Date.now
+    userType:{
+        type: String,
+        required: false
+    },
+    vendorServiceList:{
+        type: Array,
+        required: false
     }
 });
 

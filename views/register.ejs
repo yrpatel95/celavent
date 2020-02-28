@@ -83,6 +83,52 @@
               value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
             />
           </div>
+
+          <!-- Add in code for vendor vs host toggle -->
+          <div class="form-group">
+            <label class="switch">
+              <input class="switch-input" type="checkbox" id="userType" name="userType" value="Host"/>
+              <span class="switch-label" data-on="Host" data-off="Vendor" ></span> 
+              <span class="switch-handle"></span> 
+            </label>
+          </div>
+
+          <div class="form-group" id="vendorServiceList">
+            <label>Service Offered</label>
+            <br>
+            <div class="row">
+              <div class="col-sm-4 registerCheckbox">
+                <label class="container-checkbox">Photography
+                  <input type="checkbox" id="photographyCB" name="vendorServiceList" value="Photography">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-sm-4 registerCheckbox">
+                <label class="container-checkbox">Videography
+                  <input type="checkbox" id="videographyCB" name="vendorServiceList" value="Videography">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-sm-4 registerCheckbox">
+                <label class="container-checkbox">DJ Service
+                  <input type="checkbox" id="musicCB" name="vendorServiceList" value="DJ">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-sm-4 registerCheckbox">
+                <label class="container-checkbox">Catering
+                  <input type="checkbox" id="foodCB" name="vendorServiceList" value="Food">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-sm-4 registerCheckbox">
+                <label class="container-checkbox">Makeup Artist 
+                  <input type="checkbox" id="makeupCB" name="vendorServiceList" value="Makeup">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </div>
+          </div>
           <button type="submit" class="btn btn-light btn-block mb-2">
             Register
           </button>
@@ -92,3 +138,15 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function(){
+    var elem = $("#vendorServiceList");
+    
+    $("#userType").click(function(){
+      $( "#vendorServiceList" ).slideToggle();
+    });
+  });
+</script>
+
+
