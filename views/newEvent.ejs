@@ -2,7 +2,6 @@
     <div class="row" style="text-align:center">
         <div class="col-md-12">
             <h1 class="newEventHeader">Create a New Event</h1>
-            <p>username: <%=userEmail%></p>
             <form action="/newEvent" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" placeholder="Event Name" name="eventName" required>
@@ -37,10 +36,51 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="number" placeholder="Budget" name="budget">
+                    <label>Desired Vendor</label>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-2 hostBudget">
+                            <label>Photography</label>
+                        </div>
+                        <div class="col-sm-2 hostBudget">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="yes" checked/>
+                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div>
+                        
+                        <div class="col-sm-8 hostBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget">
+                        </div>
+                        <div class="col-sm-2">
+                            <label>Videography</label>
+                        </div>
+                        <div class="col-sm-2 hostBudget">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="yes" checked/>
+                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div>
+                        <div class="col-sm-8 hostBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget">
+                        </div>
+                        <div class="col-sm-2 hostBudget">
+                            <label>Entertainment</label>
+                        </div>
+                        <div class="col-sm-2 hostBudget">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div>
+                        <div class="col-sm-8 hostBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget">
+                        </div>
+                    </div>
                 </div>
-                
-               
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit</button>
                 </div>
@@ -60,4 +100,21 @@ function myFunction() {
     endDate.style.display = "none";
   }
 }
+
+
+$(document).ready(function(){
+    var elem = $("#photographerCB");
+    var elem = $("#videographerCB");
+    var elem = $("#djCB");
+    
+    $("#photographerCB").click(function(){
+      $( "#photographyBudget" ).slideToggle("fast");
+    });
+    $("#videographerCB").click(function(){
+      $( "#videographyBudget" ).slideToggle("fast");
+    });
+    $("#entertainmentCB").click(function(){
+      $( "#entertainmentBudget" ).slideToggle("fast");
+    });
+});
 </script>

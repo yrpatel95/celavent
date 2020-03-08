@@ -20,10 +20,6 @@ const EventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    budget: {
-        type: String,
-        required: true
-    },
     eventLength: {
         type: String,
         required: true
@@ -39,7 +35,20 @@ const EventSchema = new mongoose.Schema({
     userEmail: {
         type: String,
         required: true
+    },
+    photographyBudget: {
+        type: Number,
+        required: false
+    },
+    videographyBudget: {
+        type: Number,
+        required: false
+    },
+    entertainmentBudget: {
+        type: Number,
+        required: false
     }
+
 
 
 });

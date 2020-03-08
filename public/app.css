@@ -280,3 +280,7 @@ label {
 .registerCheckbox{
 	padding: 10px;
 }
+
+.hostBudget{
+	padding-top: 2px;
+}

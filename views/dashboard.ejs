@@ -27,11 +27,19 @@
                         </li>
                         <li class="list-group-item"><%=clients.venueName%></li>
                         <li class="list-group-item"><%=clients.venueCity%>,<%=clients.venueState%></li>
-                        <li class="list-group-item"><%=clients.budget%></li>
                         <li class="list-group-item" id="eventLength"><%=clients.eventLength%></li>
                         <li class="list-group-item">Start: <%=clients.startDate%></li>
                         <% if(clients.eventLength == "multiDay"){ %>
-                        <li class="list-group-item" id="endDate">End: <%=clients.endDate%></li>
+                            <li class="list-group-item" id="endDate">End: <%=clients.endDate%></li>
+                        <% } %>
+                        <% if(clients.photographyBudget != null){ %>
+                            <li class="list-group-item" id="photographyBudget">Photography: $<%=clients.photographyBudget%></li>
+                        <% } %>
+                        <% if(clients.videographyBudget != null){ %>
+                            <li class="list-group-item" id="videographyBudget">Videograhpy: $<%=clients.videographyBudget%></li>
+                        <% } %>
+                        <% if(clients.entertainmentBudget != null){ %>
+                            <li class="list-group-item" id="entertainmentBudget">Entertainment: $<%=clients.entertainmentBudget%></li>
                         <% } %>
 
                     </ul>
@@ -47,3 +55,4 @@
 
     </div>
 </div>
+
