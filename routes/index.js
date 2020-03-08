@@ -12,21 +12,58 @@ router.get('/', (req, res) => res.render('home'));
 router.get('/welcome', (req, res) => res.render('welcome'));
 
 // Dashboard Page
-
-
 router.get('/dashboard', ensureAuthenticated,(req, res) => {
-    Event.find({userEmail: req.user.email},{},function(err,eventList){
+    const {userType, vendorServiceList} = req.body;
+    var userEmail = req.user.email;
+    
+    // if(userType=="vendor"){
+    // //gather information for vendors
+    //     Event.find({userEmail: userEmail},{},function(err,eventList){
+    //         if(err){
+    //             console.log("Error recieving the all the cleint event list");
+    //             console.log(err);
+    //         } else {
+    //             //console.log(eventList);
+    //             res.render('dashboard', {
+    //                 name: userEmail,
+    //                 clients: eventList,
+    //                 userType: userType
+    //             })
+    //         }
+    //     });
+
+    // } else {
+    //     //gather information for host
+    //     Event.find({userEmail: userEmail},{},function(err,eventList){
+    //         if(err){
+    //             console.log("Error recieving the user list of events");
+    //             console.log(err);
+    //         } else {
+    //             //console.log(eventList);
+    //             res.render('dashboard', {
+    //                 name: userEmail,
+    //                 clients: eventList,
+    //                 userType: userType
+    //             })
+    //         }
+    //     });
+    // }
+
+
+    Event.find({userEmail: userEmail},{},function(err,eventList){
         if(err){
-            console.log("Error recieving the client list");
+            console.log("Error recieving the user list of events");
             console.log(err);
         } else {
-             //console.log(eventList);
+            //console.log(eventList);
             res.render('dashboard', {
-                name: req.user.email,
-                clients: eventList
+                name: userEmail,
+                clients: eventList,
+                userType: userType
             })
         }
     });
+    
     
     
 });
@@ -38,17 +75,37 @@ router.get('/newEvent', ensureAuthenticated, (req, res) => res.render('newEvent'
 
 //Post from New Event Page
 router.post('/newEvent', ensureAuthenticated, (req, res) => {
-    console.log("useremail: " + req.user.email);
-    var eventName = req.body.eventName;
-    var startDate = req.body.startDate;
-    var endDate = req.body.endDate;
-    var venueName = req.body.venueName;
-    var venueCity = req.body.venueCity;
-    var venueState = req.body.venueState;
-    var budget = req.body.budget;
-    var eventLength = req.body.eventLength;
+    var {eventName, startDate, endDate, 
+        endDate, venueName, venueCity,
+         venueState, 
+         photographyBudget, videographyBudget, entertainmentBudget} = req.body;
+    const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
 
+    if(photographerCB == undefined){
+        photographyBudget = null;
+    }
+
+    if(videographerCB == undefined){
+        videographyBudget = null;
+    }
+
+    if(entertainmentCB == undefined){
+        entertainmentBudget = null;
+    }
+
+
+    // var eventName = req.body.eventName;
+    // var startDate = req.body.startDate;
+    // var endDate = req.body.endDate;
+    // var venueName = req.body.venueName;
+    // var venueCity = req.body.venueCity;
+    // var venueState = req.body.venueState;
+    // var eventLength = req.body.eventLength;
+    // var userEmail = req.user.email;
+    // var photographyBudget = req.body.photographyBudget;
+    // var videographyBudget = req.body.videographyBudget;
+    // var entertainmentBudget = req.body.entertainmentBudget;
 
     var newEvent = new Event({
         eventName: eventName,
@@ -58,8 +115,10 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         venueCity: venueCity,
         eventLength: eventLength,
         venueState: venueState,
-        budget: budget,
-        userEmail: userEmail
+        userEmail: userEmail,
+        photographyBudget: photographyBudget,
+        videographyBudget: videographyBudget,
+        entertainmentBudget: entertainmentBudget
     });
 
 
