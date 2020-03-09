@@ -111,7 +111,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
     if(entertainmentCB == undefined){
         entertainmentBudget = null;
     } else {
-        if(videographyBudget == null || videographyBudget == 0){
+        if(entertainmentBudget == null || entertainmentBudget == 0){
             errors.push({
                 msg: "Please fill in entertainment budget"
             });
