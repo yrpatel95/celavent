@@ -75,6 +75,8 @@ router.get('/newEvent', ensureAuthenticated, (req, res) => res.render('newEvent'
 
 //Post from New Event Page
 router.post('/newEvent', ensureAuthenticated, (req, res) => {
+    let errors = [];
+
     var {eventName, startDate, endDate, 
         endDate, venueName, venueCity,
          venueState, 
@@ -82,30 +84,39 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
 
+
+    
+
+    //remove any values for budget that is selected as no
     if(photographerCB == undefined){
         photographyBudget = null;
+    } else {
+        if(photographyBudget == null || photographyBudget == 0){
+            errors.push({
+                msg: "Please fill in photography budget"
+            });
+        }
     }
 
     if(videographerCB == undefined){
         videographyBudget = null;
+    } else {
+        if(videographyBudget == null || videographyBudget == 0){
+            errors.push({
+                msg: "Please fill in videography budget"
+            });
+        }
     }
 
     if(entertainmentCB == undefined){
         entertainmentBudget = null;
+    } else {
+        if(videographyBudget == null || videographyBudget == 0){
+            errors.push({
+                msg: "Please fill in entertainment budget"
+            });
+        }
     }
-
-
-    // var eventName = req.body.eventName;
-    // var startDate = req.body.startDate;
-    // var endDate = req.body.endDate;
-    // var venueName = req.body.venueName;
-    // var venueCity = req.body.venueCity;
-    // var venueState = req.body.venueState;
-    // var eventLength = req.body.eventLength;
-    // var userEmail = req.user.email;
-    // var photographyBudget = req.body.photographyBudget;
-    // var videographyBudget = req.body.videographyBudget;
-    // var entertainmentBudget = req.body.entertainmentBudget;
 
     var newEvent = new Event({
         eventName: eventName,
@@ -121,17 +132,27 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         entertainmentBudget: entertainmentBudget
     });
 
-
-    console.log(newEvent);
-
-    newEvent.save()
+    if(errors.length > 0){
+        res.render('newEvent', {
+            errors,
+            eventName,
+            startDate,
+            endDate,
+            venueName,
+            venueCity,
+            venueState,
+            photographyBudget,
+            videographyBudget,
+            entertainmentBudget
+        });
+    } else {
+        newEvent.save()
         .then(user => {
             req.flash('success_msg', 'You have added a new event!');
             res.redirect('/dashboard')
         })
         .catch(err => console.log(err));
-
-       
+    }
 
 });
 
