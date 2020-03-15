@@ -284,3 +284,31 @@ label {
 .hostBudget{
 	padding-top: 2px;
 }
+
+
+
+
+
+.sk-package {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 82px;
+    max-height: 82px;
+    background-color: white;
+    box-shadow: 0 10px 24px -12px rgba(8, 12, 0, 0.25);
+    padding: 0 20px 10px;
+    transition: all 0.25s ease-in-out;
+}
+
+.sk-package__info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-basis: 50%;
+}
+
+.navbar-dark .navbar-nav .show>.nav-link, .navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .nav-link.active {
+    color: #FF7F15;
+}
