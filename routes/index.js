@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Event = require('../models/event');
+const dateFormat = require('dateformat');
 const { ensureAuthenticated } = require('../config/auth');
 
 
@@ -8,14 +9,53 @@ const { ensureAuthenticated } = require('../config/auth');
 // Welcome Page
 router.get('/', (req, res) => res.render('home'));
 
+router.get('/marketplace', (req, res) => res.render('marketplace'));
+
 // Home Page
 router.get('/welcome', (req, res) => res.render('welcome'));
 
 // Dashboard Page
 router.get('/dashboard', ensureAuthenticated,(req, res) => {
-    const {userType, vendorServiceList} = req.body;
+   
     var userEmail = req.user.email;
+    const userType = req.user.userType;
+
+
+    if(userType=="vendor"){
+        const vendorServiceList = req.user.vendorServiceList;
+        console.log(vendorServiceList);
+
+        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
+            if(err){
+                console.log("Error recieving the user list of events");
+                console.log(err);
+            } else {
+                // console.log(eventList);
+                res.render('marketplace', {
+                    eventList: eventList,
+                });
+            }
+        });
+
+        
+    } else {
+        Event.find({userEmail: userEmail},{},function(err,eventList){
+            if(err){
+                console.log("Error recieving the user list of events");
+                console.log(err);
+            } else {
+                //console.log(eventList);
+                res.render('dashboard', {
+                    name: userEmail,
+                    clients: eventList,
+                    userType: userType
+                })
+            }
+        });
+       
+    }
     
+
     // if(userType=="vendor"){
     // //gather information for vendors
     //     Event.find({userEmail: userEmail},{},function(err,eventList){
@@ -50,19 +90,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
     // }
 
 
-    Event.find({userEmail: userEmail},{},function(err,eventList){
-        if(err){
-            console.log("Error recieving the user list of events");
-            console.log(err);
-        } else {
-            //console.log(eventList);
-            res.render('dashboard', {
-                name: userEmail,
-                clients: eventList,
-                userType: userType
-            })
-        }
-    });
+    
     
     
     
@@ -83,7 +111,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
-
+    var vendorServiceList = [];
 
     
 
@@ -96,6 +124,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
                 msg: "Please fill in photography budget"
             });
         }
+        vendorServiceList.push("Photography");
+
     }
 
     if(videographerCB == undefined){
@@ -106,27 +136,30 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
                 msg: "Please fill in videography budget"
             });
         }
+        vendorServiceList.push("Videography");
     }
 
     if(entertainmentCB == undefined){
         entertainmentBudget = null;
     } else {
-        if(videographyBudget == null || videographyBudget == 0){
+        if(entertainmentBudget == null || entertainmentBudget == 0){
             errors.push({
                 msg: "Please fill in entertainment budget"
             });
         }
+        vendorServiceList.push("Entertainment");
     }
 
     var newEvent = new Event({
         eventName: eventName,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: dateFormat(startDate, "mmmm dS, yyyy"),
+        endDate: dateFormat(endDate, "mmmm dS, yyyy"),
         venueName: venueName,
         venueCity: venueCity,
         eventLength: eventLength,
         venueState: venueState,
         userEmail: userEmail,
+        vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
         entertainmentBudget: entertainmentBudget

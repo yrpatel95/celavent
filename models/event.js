@@ -36,6 +36,10 @@ const EventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    vendorServiceList: {
+        type: Array,
+        required: true
+    },
     photographyBudget: {
         type: Number,
         required: false
