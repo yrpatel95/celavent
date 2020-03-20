@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row" style="text-align:center">
         <div class="col-md-12">
-            <h1 class="newEventHeader">Create a New Event</h1>
+            <h1 class="newEventHeader"><%= event.eventName %></h1>
             <% if(typeof errors != 'undefined'){ %>
                 <% errors.forEach(function(error) { %>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -12,6 +12,7 @@
                       </div>
                 <% }); %>
             <% } %>
+    
             <% if(success_msg != ''){ %>
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <%= success_msg %>
@@ -39,15 +40,10 @@
               </div>
             <% } %>
     
-            <script>
-                $( function() {
-                    $( "#startDate" ).datepicker();
-                } );
-            </script>
 
-            <form action="/newEvent" method="POST">
+            <!-- <form action="/updateEvent" method="POST"> -->
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="Event Name" name="eventName" required>
+                    <input class="form-control" type="text" placeholder="Event Name" name="eventName" required value="<%= event.eventName %>">
                 </div>
                 <div class="form-group">
                     <label class="radio-inline">
@@ -58,23 +54,23 @@
                     </label>
                     <div class="row">
                         <div class="col-md-6">
-                            <input class="form-control" type="text" placeholder="Start Date" name="startDate" id="startDate" required>
+                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" value="<%= event.startDate %>" required>
                         </div>
                         <div class="col-md-6">
-                            <input class="form-control" type="text" placeholder="End Date" name="endDate" id="endDate">
+                            <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" value="<%= event.endDate %>"> 
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="string" placeholder="Venue Name" name="venueName" required>
+                    <input class="form-control" type="string" placeholder="Venue Name" name="venueName" value="<%= event.venueName %>" required>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-6">
-                            <input class="form-control" type="string" placeholder="City" name="venueCity" required>
+                            <input class="form-control" type="string" placeholder="City" name="venueCity" value="<%= event.venueCity %>" required>
                         </div>
                         <div class="col-md-6">
-                            <input class="form-control" type="string" placeholder="state" name="venueState" required>
+                            <input class="form-control" type="string" placeholder="state" name="venueState" value="<%= event.venueState %>" required>
                         </div>
                     </div>
                 </div>
@@ -94,7 +90,7 @@
                         </div>
                         
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
                         </div>
                         <div class="col-sm-2">
                             <label>Videography</label>
@@ -107,7 +103,7 @@
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget" value="<%= event.videographyBudget %>">
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label>Entertainment</label>
@@ -120,7 +116,7 @@
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget">
+                            <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
                         </div>
                     </div>
                 </div>
@@ -128,15 +124,16 @@
                     <button class="btn btn-light btn-med btn-block">Submit</button>
                 </div>
                 <div class="form-group">
-                    <a class="btn btn-light btn-med btn-block" href="/dashboard">Go Back</a>
+                    <!-- <a class="btn btn-light btn-med btn-block" href="/dashboard">Go Back</a> -->
                 </div>
-            </form>
+            <!-- </form> -->
         </div>
     </div>
 </div>
 
 
 <script>
+if ( $('#startDate')[0].type != 'date' ) $('#startDate').datepicker();
 
 
 function myFunction() {

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Event = require('../models/event');
 const dateFormat = require('dateformat');
+var ObjectId = require('mongodb').ObjectID;
 const { ensureAuthenticated } = require('../config/auth');
 
 
@@ -51,49 +52,8 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
                     userType: userType
                 })
             }
-        });
-       
-    }
-    
-
-    // if(userType=="vendor"){
-    // //gather information for vendors
-    //     Event.find({userEmail: userEmail},{},function(err,eventList){
-    //         if(err){
-    //             console.log("Error recieving the all the cleint event list");
-    //             console.log(err);
-    //         } else {
-    //             //console.log(eventList);
-    //             res.render('dashboard', {
-    //                 name: userEmail,
-    //                 clients: eventList,
-    //                 userType: userType
-    //             })
-    //         }
-    //     });
-
-    // } else {
-    //     //gather information for host
-    //     Event.find({userEmail: userEmail},{},function(err,eventList){
-    //         if(err){
-    //             console.log("Error recieving the user list of events");
-    //             console.log(err);
-    //         } else {
-    //             //console.log(eventList);
-    //             res.render('dashboard', {
-    //                 name: userEmail,
-    //                 clients: eventList,
-    //                 userType: userType
-    //             })
-    //         }
-    //     });
-    // }
-
-
-    
-    
-    
-    
+        });  
+    }    
 });
 
 
@@ -186,6 +146,43 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         })
         .catch(err => console.log(err));
     }
+
+});
+
+router.get('/deleteEvent/:id', function(req, res, next) {
+    var id = req.params.id;
+  
+    //console.log(id);
+
+    var userEmail = req.user.email;
+    Event.deleteOne( { "_id" : ObjectId(id) },function(err,collection){
+        if(err){
+            console.log("Error recieving the user list of events");
+            console.log(err);
+        } else {
+            //console.log(id + " Record(s) deleted successfully");
+            res.redirect('/dashboard');
+        }
+    });
+
+});
+
+router.get('/updateEvent/:id', function(req, res, next) {
+    var id = req.params.id;
+  
+    //console.log(id);
+
+    Event.find({"_id" : ObjectId(id)},{},function(err,event){
+        if(err){
+            console.log("Error recieving the user list of events");
+            console.log(err);
+        } else {
+            
+            res.render('updateEvent', {
+                event: event[0]
+            })
+        }
+    });  
 
 });
 
