@@ -42,12 +42,18 @@
                         <% if(clients.entertainmentBudget != null){ %>
                             <li class="list-group-item" id="entertainmentBudget">Entertainment: $<%=clients.entertainmentBudget%></li>
                         <% } %>
+                        <li class="list-group-item">
+                            <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
+                            <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
+                        </li>
+                        <li class="list-group-item"><a class="btn btn-light" role="button">See Vendor</a></li>
                     </ul>
                 </div>
-                <div class="card-body" style="text-align:center">
-                    <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">See More Info</a>
+                <!-- <div class="card-body" style="text-align:center">
+                    <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
                     <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
-                </div>
+                    <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">See Vendors</a>
+                </div> -->
             </div>
         </div>
         <% }); %>

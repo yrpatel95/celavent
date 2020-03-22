@@ -177,7 +177,7 @@ router.get('/updateEvent/:id', function(req, res, next) {
             console.log("Error recieving the user list of events");
             console.log(err);
         } else {
-            
+            console.log(event);
             res.render('updateEvent', {
                 event: event[0]
             })
