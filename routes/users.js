@@ -130,4 +130,7 @@ router.get('/logout', (req, res) =>{
     res.redirect('/users/login')
 });
 
+//Profile Page
+router.get('/profile', (req, res) => res.render('profile'));
+
 module.exports = router;
