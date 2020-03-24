@@ -168,6 +168,7 @@ router.get('/deleteEvent/:id', function(req, res, next) {
 });
 
 router.get('/updateEvent/:id', function(req, res, next) {
+    
     var id = req.params.id;
   
     //console.log(id);
@@ -186,6 +187,22 @@ router.get('/updateEvent/:id', function(req, res, next) {
 
 });
 
+router.get('/view/:id', function(req, res){
+   
+    var id = req.params.id;
+
+    Event.find({"_id" : ObjectId(id)},{},function(err,event){
+        if(err){
+            console.log("Error recieving the event data");
+            console.log(err);
+        } else { 
+            res.render('view', {
+                event: event[0]
+            })
+        }
+    });  
+
+});
 
 
 module.exports = router;
