@@ -20,7 +20,7 @@
                         Event Needs
                       </a>
                       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">All</a>
+                        <a class="dropdown-item" href='dashboard'>All</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href='/marketplace-photography'>Photography</a>
                         <a class="dropdown-item" href='/marketplace-videography'>Videography</a>
@@ -53,32 +53,34 @@
     <br>
     <br>
     <% eventList.forEach(function(event){ %>
-        <div class="row sk-package">
-            <div class="col-md-3 col-sm-12">
-                <h5><%=event.eventName%></h5>
+        <% if ((event.videographyBudget != null)){%> 
+            <div class="row sk-package">
+                <div class="col-md-3 col-sm-12">
+                    <h5><%=event.eventName%></h5>
+                </div>
+                <div class="col-md-1 col-sm-12">
+                    <h7><%=event.venueCity%>, <%=event.venueState%></h7>
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <h7><%=event.startDate%></h7>
+                    <br>
+                    <h7><%=event.endDate%></h7>
+                </div>
+                <div class="col-md-1 col-sm-12">
+                    <% event.vendorServiceList.forEach(function(service){ %>
+                        <h7><%=service%></h7>
+                    <% }); %> 
+                </div>
+                <div class="col-md-1 col-sm-12">
+                    <h5>$<%= event.photographyBudget + event.videographyBudget + event.entertainmentBudget%></h5>
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <a class="btn btn-light" href='/view/<%=event.id%>' role="button">View   </a>
+                </div>
             </div>
-            <div class="col-md-1 col-sm-12">
-                <h7><%=event.venueCity%>, <%=event.venueState%></h7>
-            </div>
-            <div class="col-md-2 col-sm-12">
-                <h7><%=event.startDate%></h7>
-                <br>
-                <h7><%=event.endDate%></h7>
-            </div>
-            <div class="col-md-1 col-sm-12">
-                <% event.vendorServiceList.forEach(function(service){ %>
-                    <h7><%=service%></h7>
-                <% }); %> 
-            </div>
-            <div class="col-md-1 col-sm-12">
-                <h5>$<%= event.photographyBudget + event.videographyBudget + event.entertainmentBudget%></h5>
-            </div>
-            <div class="col-md-2 col-sm-12">
-                <a class="btn btn-light" href='/view/<%=event.id%>' role="button">View   </a>
-            </div>
-        </div>
-        <br>
-        <br>
+            <br>
+            <br>
+        <% } %> 
     <% }); %>
 </div>
 

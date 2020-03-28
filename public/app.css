@@ -61,7 +61,6 @@ body {
    color: #fff;
    background-color: #FF7F15;
    border-color: #FF7F15;
-   padding: 5px;
 }
 
 .btn-light:hover, .btn-light:focus, .btn-light:active, .btn-light.active, .open>.dropdown-toggle.btn-light {
