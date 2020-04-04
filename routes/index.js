@@ -152,7 +152,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 router.get('/deleteEvent/:id', function(req, res, next) {
     var id = req.params.id;
   
-    //console.log(id);
+    // console.log(id);
 
     // var userEmail = req.user.email;
     Event.deleteOne( { "_id" : ObjectId(id) },function(err,collection){
@@ -171,7 +171,7 @@ router.get('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
   
-    //console.log(id);
+    // console.log(id);
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
         if(err){
@@ -187,7 +187,38 @@ router.get('/updateEvent/:id', function(req, res, next) {
 
 });
 
+router.post('/updateEvent/:id', function(req, res, next) {
+    
+    var id = req.params.id;
+    // console.log(id);
 
+    var information = {
+        eventName: req.body.eventName,
+        eventLength: req.body.eventLength,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        venueName: req.body.venueName,
+        venueCity: req.body.venueCity,
+        venueState: req.body.venueState,
+        photographerCB: req.body.photographerCB,
+        photographyBudget: req.body.photographyBudget,
+        videographerCB: req.body.videographerCB,
+        videographyBudget: req.body.videographyBudget,
+        entertainmentCB: req.body.entertainmentCB,
+        entertainmentBudget: req.body.entertainmentBudget,
+    };
+
+    Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
+        if(err){
+            console.log("Error Updating Information");
+            console.log(err);
+        } else {
+            res.redirect('/dashboard');
+            // console.log(req.body);
+            // console.log(req.user);
+        }
+    });
+});
 
 //View event details
 router.get('/view/:id', function(req, res){
