@@ -112,8 +112,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
     var newEvent = new Event({
         eventName: eventName,
-        startDate: dateFormat(startDate, "mmmm dS, yyyy"),
-        endDate: dateFormat(endDate, "mmmm dS, yyyy"),
+        startDate: dateFormat(startDate, "yyyy-mm-dd"),
+        endDate: dateFormat(endDate, "yyyy-mm-dd"),
         venueName: venueName,
         venueCity: venueCity,
         eventLength: eventLength,
@@ -169,17 +169,18 @@ router.get('/deleteEvent/:id', function(req, res, next) {
 
 router.get('/updateEvent/:id', function(req, res, next) {
     var id = req.params.id;
-  
-    //console.log(id);
+
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
         if(err){
             console.log("Error recieving the user list of events");
             console.log(err);
         } else {
-            console.log(event);
+            console.log(event[0]);
             res.render('updateEvent', {
-                event: event[0]
+                event: event[0],
+                startDate: dateFormat(event[0].startDate, "yyyy-mm-dd"),
+                endDate: dateFormat(event[0].endDate, "yyyy-mm-dd")
             })
         }
     });  

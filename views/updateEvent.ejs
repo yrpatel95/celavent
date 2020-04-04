@@ -54,10 +54,10 @@
                     </label>
                     <div class="row">
                         <div class="col-md-6">
-                            <input class="form-control" type="String" placeholder="Start Date" name="startDate" id="startDate" value="<%= event.startDate %>" required>
+                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" value="<%= startDate %>" required>
                         </div>
                         <div class="col-md-6">
-                            <input class="form-control" type="String" placeholder="End Date" name="endDate" id="endDate" value="<%= event.endDate %>"> 
+                            <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" value="<%= endDate %>"> 
                         </div>
                     </div>
                 </div>
@@ -83,45 +83,72 @@
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="yes" checked/>
+                                <% if(event.photographyBudget != null){ %>
+                                    <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="No"/>
+                                <% } %>
+                                
                                 <span class="switch-label" data-on="Yes" data-off="No" ></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
+                            <% if(event.photographyBudget != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget">
+                            <% } %>
+                            
                         </div>
                         <div class="col-sm-2">
                             <label>Videography</label>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="yes" checked/>
-                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <% if(event.videographyBudget != null){ %>
+                                    <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="No"/>
+                                <% } %>
+                                    <span class="switch-label" data-on="Yes" data-off="No" ></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget" value="<%= event.videographyBudget %>">
+                            <% if(event.videographyBudget != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget" value="<%= event.videographyBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget">
+                            <% } %>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label>Entertainment</label>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
+                                <% if(event.entertainmentCB != null){ %>
+                                    <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="No"/>
+                                <% } %>
+                                
                                 <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
+                            <% if(event.entertainmentCB != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" >
+                            <% } %>                            
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-light btn-med btn-block">Submit</button>
+                    <button class="btn btn-light btn-med btn-block">Update</button>
                 </div>
                 <div class="form-group">
                     <a class="btn btn-light btn-med btn-block" href="/dashboard">Go Back</a>
