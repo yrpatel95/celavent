@@ -1,0 +1,24 @@
+<br/>
+<div class="container">
+    <div class="row" style="text-align:center; border: 1px grey solid; padding: 15px;">
+        <div class="col-md-12">
+            <h3><%= event.eventName %></h3>
+            <p>Location: <%= event.venueName %>, <%= event.venueCity %>, <%= event.venueState %></p>
+            <p>Event Length: <%= event.eventLength %></p>
+            <p>Dates: <%= event.startDate %> - <%= event.endDate %></p>
+            <p>Email: <%= event.userEmail %></p>
+            <!-- <p>Needed Services: <%= event.vendorServiceList %></p> -->
+            <p>Service Bugdet(s):</p>
+            <% if( event.photographyBudget > 0){ %>
+                <p>Photography: $<%= event.photographyBudget %></p>
+            <% } %>
+            <% if( event.videographyBudget > 0){ %>
+            <p>Videography: $<%= event.videographyBudget %></p>
+            <% } %>
+            <% if( event.videographyBudget > 0){ %>
+            <p>Entertainment: $<%= event.entertainmentBudget %></p>
+            <% } %>
+            <a class="btn btn-light" href="/dashboard">Back</a>
+        </div>
+    </div>
+</div>
