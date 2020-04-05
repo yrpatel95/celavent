@@ -170,12 +170,8 @@ router.get('/deleteEvent/:id', function(req, res, next) {
 router.get('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
-<<<<<<< HEAD
-
-=======
   
     // console.log(id);
->>>>>>> 9d602a4a1dcc0b3d3741f43460ab5ebd7115c8d0
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
         if(err){
