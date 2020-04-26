@@ -180,6 +180,8 @@ router.get('/updateEvent/:id', function(req, res, next) {
   
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
+
+        console.log(event[0].extraDetailForm);
         
         if(err){
             console.log("Error recieving the user list of events");
@@ -201,6 +203,7 @@ router.get('/updateEvent/:id', function(req, res, next) {
     });  
 
 });
+
 
 router.post('/updateEvent/:id', function(req, res, next) {
     
