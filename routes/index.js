@@ -26,7 +26,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+       
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -159,7 +159,6 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 router.get('/deleteEvent/:id', function(req, res, next) {
     var id = req.params.id;
   
-    // console.log(id);
 
     // var userEmail = req.user.email;
     Event.deleteOne( { "_id" : ObjectId(id) },function(err,collection){
@@ -181,7 +180,7 @@ router.get('/updateEvent/:id', function(req, res, next) {
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
 
-        console.log(event[0].extraDetailForm);
+
         
         if(err){
             console.log("Error recieving the user list of events");
@@ -211,23 +210,39 @@ router.post('/updateEvent/:id', function(req, res, next) {
     // console.log(id);
     
 
+    var {eventName, startDate, endDate, eventLength,
+        endDate, venueName, venueCity,
+         venueState, guestCount, eventSpaceLocation,extraDetailForm, 
+         photographyBudget, videographyBudget, entertainmentBudget} = req.body;
+    
+    //const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
+    var userEmail = req.user.email;
+
+    startDate = dateFormat(addDate(startDate), "yyyy-mm-dd");
+    
+    if(eventLength == 'multidat'){
+        endDate = dateFormat(addDate(endDate), "yyyy-mm-dd");
+    } else {
+        endDate = null;
+
+    }
+
     var information = {
-        eventName: req.body.eventName,
-        eventLength: req.body.eventLength,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        venueName: req.body.venueName,
-        venueCity: req.body.venueCity,
-        venueState: req.body.venueState,
-        photographerCB: req.body.photographerCB,
-        photographyBudget: req.body.photographyBudget,
-        videographerCB: req.body.videographerCB,
-        videographyBudget: req.body.videographyBudget,
-        entertainmentCB: req.body.entertainmentCB,
-        entertainmentBudget: req.body.entertainmentBudget,
-        guestCount: req.body.guestCount,
-        eventSpaceLocation: req.body.eventSpaceLocation,
-        extraDetailForm: req.body.extraDetailForm
+        eventName: eventName,
+        startDate: startDate,
+        endDate: endDate,
+        venueName: venueName,
+        venueCity: venueCity,
+        eventLength: eventLength,
+        venueState: venueState,
+        userEmail: userEmail,
+        vendorServiceList: [],
+        photographyBudget: photographyBudget,
+        videographyBudget: videographyBudget,
+        entertainmentBudget: entertainmentBudget,
+        guestCount: guestCount,
+        eventSpaceLocation: eventSpaceLocation,
+        extraDetailForm: extraDetailForm
     };
 
     Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
@@ -265,7 +280,7 @@ router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -292,7 +307,7 @@ router.get('/marketplace-videography', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -317,7 +332,7 @@ router.get('/marketplace-entertainment', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+  
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
