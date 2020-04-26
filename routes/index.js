@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Event = require('../models/event');
 const dateFormat = require('dateformat');
+var { addDate } =  require('../config/date');
 var ObjectId = require('mongodb').ObjectID;
 const { ensureAuthenticated } = require('../config/auth');
 
@@ -20,6 +21,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
    
     var userEmail = req.user.email;
     const userType = req.user.userType;
+
 
 
     if(userType=="vendor"){
@@ -67,7 +69,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
     var {eventName, startDate, endDate, 
         endDate, venueName, venueCity,
-         venueState, 
+         venueState, guestCount, eventSpaceLocation,extraDetailForm, 
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
@@ -122,7 +124,11 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
-        entertainmentBudget: entertainmentBudget
+        entertainmentBudget: entertainmentBudget,
+        guestCount: guestCount,
+        eventSpaceLocation: eventSpaceLocation,
+        extraDetailForm: extraDetailForm
+
     });
 
     if(errors.length > 0){
@@ -136,7 +142,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
             venueState,
             photographyBudget,
             videographyBudget,
-            entertainmentBudget
+            entertainmentBudget,
+            
         });
     } else {
         newEvent.save()
@@ -171,18 +178,24 @@ router.get('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
   
-    // console.log(id);
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
+        
         if(err){
             console.log("Error recieving the user list of events");
             console.log(err);
         } else {
-            console.log(event[0]);
+            /*
+            *
+            * temporary fix for fixing date using the addDate. Right now when doing the date format it changes the date back 1 days
+            * and to fix it created a addDate function in the /config/date file which just adds 1 day to fix the correction made by the
+            * dateformat function
+            * 
+            */
             res.render('updateEvent', {
                 event: event[0],
-                startDate: dateFormat(event[0].startDate, "yyyy-mm-dd"),
-                endDate: dateFormat(event[0].endDate, "yyyy-mm-dd")
+                startDate: dateFormat(addDate(event[0].startDate), "yyyy-mm-dd"),
+                endDate: dateFormat(addDate(event[0].endDate), "yyyy-mm-dd")
             })
         }
     });  
@@ -193,6 +206,7 @@ router.post('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
     // console.log(id);
+    
 
     var information = {
         eventName: req.body.eventName,
@@ -208,6 +222,9 @@ router.post('/updateEvent/:id', function(req, res, next) {
         videographyBudget: req.body.videographyBudget,
         entertainmentCB: req.body.entertainmentCB,
         entertainmentBudget: req.body.entertainmentBudget,
+        guestCount: req.body.guestCount,
+        eventSpaceLocation: req.body.eventSpaceLocation,
+        extraDetailForm: req.body.extraDetailForm
     };
 
     Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
@@ -216,8 +233,6 @@ router.post('/updateEvent/:id', function(req, res, next) {
             console.log(err);
         } else {
             res.redirect('/dashboard');
-            // console.log(req.body);
-            // console.log(req.user);
         }
     });
 });
@@ -259,6 +274,8 @@ router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
                     eventList: eventList,
                 });
             }
+
+
         });
         
     }

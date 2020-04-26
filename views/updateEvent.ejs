@@ -46,10 +46,18 @@
                 </div>
                 <div class="form-group">
                     <label class="radio-inline">
-                        <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()" checked>Multi-Day Event
+                        <% if(event.eventLength == 'multiDay'){ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()" checked>Multi-Day Event
+                        <%} else{ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()">Multi-Day Event
+                        <% } %>
                     </label>
                     <label class="radio-inline">
-                        <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()">Single Day Event
+                        <% if(event.eventLength == 'multiDay'){ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()">Single Day Event
+                        <%} else{ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()" checked>Single Day Event
+                        <% } %>
                     </label>
                     <div class="row">
                         <div class="col-md-6">
@@ -73,6 +81,38 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="number" placeholder="# of Guest" name="guestCount" id="guestCount" value="<%= event.guestCount %>" required>
+                        </div>
+                    
+                        <div class="col-sm-6">
+                            <% if(event.eventSpaceLocation == 'outdoorLocation'){ %>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="outdoorLocation" checked>Outdoor Event
+                                </label>
+                                <br>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="indoorLocation" >Indoor Event
+                                </label>
+                            <%} else{ %>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="outdoorLocation">Outdoor Event
+                                </label>
+                                <br>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="indoorLocation" checked>Indoor Event
+                                </label>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div class="form-group">
                     <label>Desired Vendor</label>
                     <br>
@@ -171,12 +211,12 @@ function myFunction() {
   }
 }
 
-
 $(document).ready(function(){
     var elem = $("#photographerCB");
     var elem = $("#videographerCB");
     var elem = $("#djCB");
 
+   
     
     
     $("#photographerCB").click(function(){
