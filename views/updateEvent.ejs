@@ -46,17 +46,30 @@
                 </div>
                 <div class="form-group">
                     <label class="radio-inline">
-                        <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()" checked>Multi-Day Event
+                        <% if(event.eventLength == 'multiDay'){ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()" checked>Multi-Day Event
+                        <%} else{ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="multiDay" onclick="myFunction()">Multi-Day Event
+                        <% } %>
                     </label>
                     <label class="radio-inline">
-                        <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()">Single Day Event
+                        <% if(event.eventLength == 'multiDay'){ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()">Single Day Event
+                        <%} else{ %>
+                            <input class="form-check-input" type="radio" name="eventLength" value="singleDay" onclick="myFunction()" checked>Single Day Event
+                        <% } %>
                     </label>
                     <div class="row">
                         <div class="col-md-6">
-                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" value="<%= event.startDate %>" required>
+                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" value="<%= startDate %>" required>
                         </div>
                         <div class="col-md-6">
-                            <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" value="<%= event.endDate %>"> 
+                            <% if(event.eventLength == 'multiDay'){ %>
+                                <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" value="<%= endDate %>">
+                            <% } else { %>
+                                <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" style="display:none" value="<%= endDate %>">
+                            <% } %>
+                             
                         </div>
                     </div>
                 </div>
@@ -73,6 +86,38 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="number" placeholder="# of Guest" name="guestCount" id="guestCount" value="<%= event.guestCount %>" required>
+                        </div>
+                    
+                        <div class="col-sm-6">
+                            <% if(event.eventSpaceLocation == 'outdoorLocation'){ %>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="outdoorLocation" checked>Outdoor Event
+                                </label>
+                                <br>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="indoorLocation" >Indoor Event
+                                </label>
+                            <%} else{ %>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="outdoorLocation">Outdoor Event
+                                </label>
+                                <br>
+                                <label class="row-inline">
+                                    <input class="form-check-input" type="radio" name="eventSpaceLocation" value="indoorLocation" checked>Indoor Event
+                                </label>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div class="form-group">
                     <label>Desired Vendor</label>
                     <br>
@@ -82,41 +127,74 @@
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="yes" checked/>
+                                <% if(event.photographyBudget != null){ %>
+                                    <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" value="No"/>
+                                <% } %>
+                                
                                 <span class="switch-label" data-on="Yes" data-off="No" ></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
+                            <% if(event.photographyBudget != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget">
+                            <% } %>
+                            
                         </div>
                         <div class="col-sm-2">
                             <label>Videography</label>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="yes" checked/>
-                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <% if(event.videographyBudget != null){ %>
+                                    <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" value="No"/>
+                                <% } %>
+                                    <span class="switch-label" data-on="Yes" data-off="No" ></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget" value="<%= event.videographyBudget %>">
+                            <% if(event.videographyBudget != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget" value="<%= event.videographyBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="videographyBudget" id="videographyBudget">
+                            <% } %>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label>Entertainment</label>
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
+                                <% if(event.entertainmentCB != null){ %>
+                                    <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
+                                <% } else { %>
+                                    <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="No"/>
+                                <% } %>
+                                
                                 <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
+                            <% if(event.entertainmentCB != null){ %>
+                                <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
+                            <% } else { %>
+                                <input style="display:none" class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" >
+                            <% } %>                            
                         </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="extraDetailForm">Other Event Specific Details</label>
+                        <textarea class="form-control" name="extraDetailForm" id="extraDetailForm" rows="5"><%= event.extraDetailForm %></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -132,7 +210,7 @@
 
 
 <script>
-if ( $('#startDate')[0].type != 'date' ) $('#startDate').datepicker();
+
 
 
 function myFunction() {
@@ -144,11 +222,13 @@ function myFunction() {
   }
 }
 
-
 $(document).ready(function(){
     var elem = $("#photographerCB");
     var elem = $("#videographerCB");
     var elem = $("#djCB");
+
+   
+    
     
     $("#photographerCB").click(function(){
       $( "#photographyBudget" ).slideToggle("fast");

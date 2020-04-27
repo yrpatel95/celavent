@@ -25,11 +25,11 @@ const EventSchema = new mongoose.Schema({
         required: true
     },
     startDate: {
-        type: String,
+        type: Date,
         required: true
     },
     endDate: {
-        type: String,
+        type: Date,
         required: false
     },
     userEmail: {
@@ -51,9 +51,19 @@ const EventSchema = new mongoose.Schema({
     entertainmentBudget: {
         type: Number,
         required: false
+    },
+    guestCount: {
+        type: Number,
+        required:true
+    },
+    eventSpaceLocation: {
+        type: String,
+        required:true
+    },
+    extraDetailForm: {
+        type: String,
+        required:false
     }
-
-
 
 });
 

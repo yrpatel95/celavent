@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Event = require('../models/event');
 const dateFormat = require('dateformat');
+var { addDate } =  require('../config/date');
 var ObjectId = require('mongodb').ObjectID;
 const { ensureAuthenticated } = require('../config/auth');
 
@@ -22,9 +23,10 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
     const userType = req.user.userType;
 
 
+
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+       
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -67,7 +69,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
     var {eventName, startDate, endDate, 
         endDate, venueName, venueCity,
-         venueState, 
+         venueState, guestCount, eventSpaceLocation,extraDetailForm, 
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
@@ -112,8 +114,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
     var newEvent = new Event({
         eventName: eventName,
-        startDate: dateFormat(startDate, "mmmm dS, yyyy"),
-        endDate: dateFormat(endDate, "mmmm dS, yyyy"),
+        startDate: dateFormat(startDate, "yyyy-mm-dd"),
+        endDate: dateFormat(endDate, "yyyy-mm-dd"),
         venueName: venueName,
         venueCity: venueCity,
         eventLength: eventLength,
@@ -122,7 +124,11 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
-        entertainmentBudget: entertainmentBudget
+        entertainmentBudget: entertainmentBudget,
+        guestCount: guestCount,
+        eventSpaceLocation: eventSpaceLocation,
+        extraDetailForm: extraDetailForm
+
     });
 
     if(errors.length > 0){
@@ -136,7 +142,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
             venueState,
             photographyBudget,
             videographyBudget,
-            entertainmentBudget
+            entertainmentBudget,
+            
         });
     } else {
         newEvent.save()
@@ -152,7 +159,6 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 router.get('/deleteEvent/:id', function(req, res, next) {
     var id = req.params.id;
   
-    // console.log(id);
 
     // var userEmail = req.user.email;
     Event.deleteOne( { "_id" : ObjectId(id) },function(err,collection){
@@ -171,41 +177,72 @@ router.get('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
   
-    // console.log(id);
 
     Event.find({"_id" : ObjectId(id)},{},function(err,event){
+
+
+        
         if(err){
             console.log("Error recieving the user list of events");
             console.log(err);
         } else {
-            
+            /*
+            *
+            * temporary fix for fixing date using the addDate. Right now when doing the date format it changes the date back 1 days
+            * and to fix it created a addDate function in the /config/date file which just adds 1 day to fix the correction made by the
+            * dateformat function
+            * 
+            */
             res.render('updateEvent', {
-                event: event[0]
+                event: event[0],
+                startDate: dateFormat(addDate(event[0].startDate), "yyyy-mm-dd"),
+                endDate: dateFormat(addDate(event[0].endDate), "yyyy-mm-dd")
             })
         }
     });  
 
 });
 
+
 router.post('/updateEvent/:id', function(req, res, next) {
     
     var id = req.params.id;
     // console.log(id);
+    
+
+    var {eventName, startDate, endDate, eventLength,
+        endDate, venueName, venueCity,
+         venueState, guestCount, eventSpaceLocation,extraDetailForm, 
+         photographyBudget, videographyBudget, entertainmentBudget} = req.body;
+    
+    //const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
+    var userEmail = req.user.email;
+
+    startDate = dateFormat(addDate(startDate), "yyyy-mm-dd");
+    
+    if(eventLength == 'multidat'){
+        endDate = dateFormat(addDate(endDate), "yyyy-mm-dd");
+    } else {
+        endDate = null;
+
+    }
 
     var information = {
-        eventName: req.body.eventName,
-        eventLength: req.body.eventLength,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        venueName: req.body.venueName,
-        venueCity: req.body.venueCity,
-        venueState: req.body.venueState,
-        photographerCB: req.body.photographerCB,
-        photographyBudget: req.body.photographyBudget,
-        videographerCB: req.body.videographerCB,
-        videographyBudget: req.body.videographyBudget,
-        entertainmentCB: req.body.entertainmentCB,
-        entertainmentBudget: req.body.entertainmentBudget,
+        eventName: eventName,
+        startDate: startDate,
+        endDate: endDate,
+        venueName: venueName,
+        venueCity: venueCity,
+        eventLength: eventLength,
+        venueState: venueState,
+        userEmail: userEmail,
+        vendorServiceList: [],
+        photographyBudget: photographyBudget,
+        videographyBudget: videographyBudget,
+        entertainmentBudget: entertainmentBudget,
+        guestCount: guestCount,
+        eventSpaceLocation: eventSpaceLocation,
+        extraDetailForm: extraDetailForm
     };
 
     Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
@@ -214,8 +251,6 @@ router.post('/updateEvent/:id', function(req, res, next) {
             console.log(err);
         } else {
             res.redirect('/dashboard');
-            // console.log(req.body);
-            // console.log(req.user);
         }
     });
 });
@@ -245,7 +280,7 @@ router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -257,6 +292,8 @@ router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
                     eventList: eventList,
                 });
             }
+
+
         });
         
     }
@@ -270,7 +307,7 @@ router.get('/marketplace-videography', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){
@@ -295,7 +332,7 @@ router.get('/marketplace-entertainment', ensureAuthenticated, (req, res) =>{
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-        console.log(vendorServiceList);
+  
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
             if(err){

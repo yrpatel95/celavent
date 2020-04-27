@@ -12,7 +12,7 @@
 
     <div class="row text-center" style="display:flex; flex-wrap:wrap;">
 
-
+        
         <% clients.forEach(function(clients){ %>
         <div class="col-md-4 col-sm-12">
             <br>
@@ -23,7 +23,8 @@
                         <li class="list-group-item">
                             <h4 class="card-title"><%=clients.eventName%></h4>
                         </li>
-                        <li class="list-group-item"><%=clients.venueName%></li>
+
+                        <!-- <li class="list-group-item"><%=clients.venueName%></li>
                         <li class="list-group-item"><%=clients.venueCity%>,<%=clients.venueState%></li>
                         
                         <li class="list-group-item">Start: <%=clients.startDate%></li>
@@ -41,13 +42,23 @@
                         <% } %>
                         <% if(clients.entertainmentBudget != null){ %>
                             <li class="list-group-item" id="entertainmentBudget">Entertainment: $<%=clients.entertainmentBudget%></li>
-                        <% } %>
+                        <% } %> -->
+
+                        
+                        <li class="list-group-item">
+                            <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
+                            <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
+                        </li>
+                        <li class="list-group-item"><a class="btn btn-light" role="button">See Vendor</a></li>
                     </ul>
                 </div>
-                <div class="card-body" style="text-align:center">
-                    <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">See More Info</a>
-                    <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
-                </div>
+                <!-- 
+                    <div class="card-body" style="text-align:center">
+                        <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
+                        <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
+                        <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">See Vendors</a>
+                    </div>
+                 -->
             </div>
         </div>
         <% }); %>
