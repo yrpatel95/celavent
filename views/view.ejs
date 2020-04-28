@@ -1,4 +1,6 @@
 <br/>
+
+<!---
 <div class="container">
     <div class="row" style="text-align:center; border: 1px grey solid; padding: 15px;">
         <div class="col-md-12">
@@ -7,7 +9,9 @@
             <p>Event Length: <%= event.eventLength %></p>
             <p>Dates: <%= event.startDate %> - <%= event.endDate %></p>
             <p>Email: <%= event.userEmail %></p>
+-->           
             <!-- <p>Needed Services: <%= event.vendorServiceList %></p> -->
+<!---
             <p>Service Bugdet(s):</p>
             <% if( event.photographyBudget > 0){ %>
                 <p>Photography: $<%= event.photographyBudget %></p>
@@ -22,3 +26,66 @@
         </div>
     </div>
 </div>
+
+-->
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Portfolio Item Heading -->
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="my-4"><%= event.eventName %></h1>
+        </div>
+    </div>
+    
+  
+    <!-- Portfolio Item Row -->
+    <div class="row">
+  
+      <div class="col-md-8">
+        <img src="https://images.unsplash.com/photo-1541089404510-5c9a779841fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" width="730" height="500">
+      </div>
+      
+  
+      <div class="col-md-4">
+        <h3 class="my-3">Event Details</h3>
+        <p><strong>Venue Name: </strong><%= event.venueName %></p>
+        <p><strong>Location: </strong><%= event.venueCity %>, <%= event.venueState %></p>
+        <p><strong>Dates:</strong> <%= event.startDateDisplay %> - <%= event.endDateDisplay %></p>
+        <p><strong></strong>Email:</strong> <%= event.userEmail %></p>
+        <p><strong></strong># of Guest:</strong> <%= event.guestCount %></p>
+        <% if( event.eventSpaceLocation == "outdoorLocation"){ %>
+            <p><strong>Outdoor Event</strong></p>
+        <% } else { %>
+            <p><strong>Indoor Event</strong></p>
+        <% } %>
+
+        <h3 class="my-3">Services Needed</h3>
+       
+        <% if( event.photographyBudget > 0){ %>
+            <p><strong>Photography: </strong>$<%= event.photographyBudget %></p>
+        <% } %>
+        <% if( event.videographyBudget > 0){ %>
+            <p><strong>Videography: </strong>$<%= event.videographyBudget %></p>
+        <% } %>
+        <% if( event.videographyBudget > 0){ %>
+            <p><strong>Entertainment: </strong>$<%= event.entertainmentBudget %></p>
+        <% } %>
+
+        <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">Bid   </a>
+      </div>
+  
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="my-3">Additional Details</h3>
+            <p><%= event.extraDetailForm %></p>
+        </div>
+        
+    </div>
+
+  
+
+  
+  </div>
