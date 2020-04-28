@@ -294,7 +294,7 @@ label {
     position: relative;
     justify-content: space-between;
     align-items: center;
-    min-height: 200px;
+    min-height: 125px;
     max-height: 200px;
     background-color: white;
     box-shadow: 0 10px 24px -12px rgba(8, 12, 0, 0.25);

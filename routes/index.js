@@ -29,6 +29,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
        
 
         Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
+
             if(err){
                 console.log("Error recieving the user list of events");
                 console.log(err);
@@ -73,10 +74,22 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
-    var vendorServiceList = [];
-
     
 
+    var startDateDisplay = dateFormat(addDate(startDate),"mmmm dS yyyy");
+
+    //console.log(dateFormat(addDate(startDate), "mmmm dS yyyy"))
+    
+    if(eventLength == 'multiDay'){
+        var endDateDisplay = dateFormat(addDate(endDate),"mmmm dS yyyy");
+    } else {
+        endDate = null;
+        var endDateDisplay = null;
+
+    }
+
+    
+    var vendorServiceList = [];
     //remove any values for budget that is selected as no
     if(photographerCB == undefined){
         photographyBudget = null;
@@ -114,8 +127,10 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
     var newEvent = new Event({
         eventName: eventName,
-        startDate: dateFormat(startDate, "yyyy-mm-dd"),
-        endDate: dateFormat(endDate, "yyyy-mm-dd"),
+        startDate: startDate,
+        endDate: endDate,
+        startDateDisplay: startDateDisplay,
+        endDateDisplay: endDateDisplay,
         venueName: venueName,
         venueCity: venueCity,
         eventLength: eventLength,
@@ -215,28 +230,74 @@ router.post('/updateEvent/:id', function(req, res, next) {
          venueState, guestCount, eventSpaceLocation,extraDetailForm, 
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     
-    //const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
+    const {photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
 
-    startDate = dateFormat(addDate(startDate), "yyyy-mm-dd");
+    startDate = addDate(startDate);
+    var startDateDisplay = dateFormat(startDate,"mmmm dS yyyy");
     
-    if(eventLength == 'multidat'){
-        endDate = dateFormat(addDate(endDate), "yyyy-mm-dd");
+    if(eventLength == 'multiDay'){
+        endDate = addDate(endDate);
+        var endDateDisplay = dateFormat(endDate,"mmmm dS yyyy");
     } else {
         endDate = null;
+        var endDateDisplay = null;
 
     }
+
+
+
+
+    var vendorServiceList = [];
+    //remove any values for budget that is selected as no
+    if(photographerCB == undefined){
+        photographyBudget = null;
+    } else {
+        if(photographyBudget == null || photographyBudget == 0){
+            errors.push({
+                msg: "Please fill in photography budget"
+            });
+        }
+        vendorServiceList.push("Photography");
+
+    }
+
+    if(videographerCB == undefined){
+        videographyBudget = null;
+    } else {
+        if(videographyBudget == null || videographyBudget == 0){
+            errors.push({
+                msg: "Please fill in videography budget"
+            });
+        }
+        vendorServiceList.push("Videography");
+    }
+
+    if(entertainmentCB == undefined){
+        entertainmentBudget = null;
+    } else {
+        if(entertainmentBudget == null || entertainmentBudget == 0){
+            errors.push({
+                msg: "Please fill in entertainment budget"
+            });
+        }
+        vendorServiceList.push("Entertainment");
+    }
+
+
 
     var information = {
         eventName: eventName,
         startDate: startDate,
         endDate: endDate,
+        startDateDisplay: startDateDisplay,
+        endDateDisplay: endDateDisplay,
         venueName: venueName,
         venueCity: venueCity,
         eventLength: eventLength,
         venueState: venueState,
         userEmail: userEmail,
-        vendorServiceList: [],
+        vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
         entertainmentBudget: entertainmentBudget,
@@ -273,7 +334,7 @@ router.get('/view/:id', function(req, res){
 
 });
 
-//Filtre for photography
+//Filter for photography
 router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
