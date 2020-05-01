@@ -360,78 +360,124 @@ router.get('/view/:id', function(req, res){
 });
 
 //Filter for photography
-router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
+router.get('/marketplace/photography', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-photography', {
-                    eventList: eventList,
-                });
-            }
-
-
-        });
         
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Photography"] }}]}, function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: { $in: ["Photography"] }},{},function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
     }
 
 });
 
 //filter for videography
-router.get('/marketplace-videography', ensureAuthenticated, (req, res) =>{
+router.get('/marketplace/videography', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-videography', {
-                    eventList: eventList,
-                });
-            }
-        });
         
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Videography"] }}]}, function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: { $in: ["Videography"] }},{},function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
     }
 
 });
 
 //filter for entertainment
-router.get('/marketplace-entertainment', ensureAuthenticated, (req, res) =>{
+router.get('/marketplace/entertainment', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-  
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-entertainment', {
-                    eventList: eventList,
-                });
-            }
-        });
         
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Entertainment"] }}]}, function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: { $in: ["Entertainment"] }},{},function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
     }
 
 });

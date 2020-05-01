@@ -61,13 +61,13 @@
                     </label>
                     <div class="row">
                         <div class="col-md-6">
-                            <input class="form-control" type="Date" placeholder="Start Date" name="startDate" id="startDate" value="<%= startDate %>" required>
+                            <input class="form-control" type="Date" placeholder="Start Date (MM/DD/YYYY)" name="startDate" id="startDate" value="<%= startDate %>" required>
                         </div>
                         <div class="col-md-6">
                             <% if(event.eventLength == 'multiDay'){ %>
-                                <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" value="<%= endDate %>">
+                                <input class="form-control" type="Date" placeholder="End Date (MM/DD/YYYY)" name="endDate" id="endDate" value="<%= endDate %>">
                             <% } else { %>
-                                <input class="form-control" type="Date" placeholder="End Date" name="endDate" id="endDate" style="display:none" value="<%= endDate %>">
+                                <input class="form-control" type="Date" placeholder="End Date (MM/DD/YYYY)" name="endDate" id="endDate" style="display:none" value="<%= endDate %>">
                             <% } %>
                              
                         </div>
