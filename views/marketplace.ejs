@@ -39,7 +39,7 @@
                         </div>
                       </li>
                   </ul>
-                  <!-- action='/marketplace'  -->
+                  
                   <form method="GET" class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-light " type="submit" value="Search">Search</button>
@@ -50,7 +50,8 @@
     </div>
 
     <br>
-    <br>
+    <br> 
+
     <% eventList.forEach(function(event){ %>
         <div class="row sk-package">
             <div class="col-md-3">
@@ -75,8 +76,7 @@
             <div class="col-md-2">
               <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">View   </a>
               <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">Bid   </a>
-              
-          </div>
+            </div>
         </div>
         <br>
         <br>

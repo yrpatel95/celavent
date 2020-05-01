@@ -24,23 +24,23 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-    
+        
             if(req.query.search){
+
                 const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-                Event.find({"eventName": regex}, function(err, eventList){
+                Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}, function(err, eventList){
                     if(err){
                         console.log(err);
                     } else {
                         if(eventList.length < 1) {
-                        req.flash("error", "Event not found");
-                        console.log("No Event Found");
-                        return res.render('marketplace', 
-                        {eventList:eventList,
-                        });
+                            // req.flash('no_results', 'Event not found');
+                            console.log("No Event Found");
+                            res.redirect('/dashboard');
+                        }else{
+                            res.render('marketplace',
+                            {eventList: eventList,
+                            });
                         }
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
                     }
                 });
             }else{
@@ -51,7 +51,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
                     } else {
                         res.render('marketplace', 
                         {eventList: eventList,
-                        });
+                        }); 
                     }
                 });
             }
