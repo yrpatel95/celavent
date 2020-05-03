@@ -102,7 +102,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
-    
+    var totalBudget = 0;
 
     var startDateDisplay = dateFormat(addDate(startDate),"mmmm dS yyyy");
 
@@ -153,6 +153,18 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList.push("Entertainment");
     }
 
+    if(photographyBudget != null){
+        totalBudget += parseInt(photographyBudget);
+    }
+
+    if(videographyBudget != null){
+        totalBudget += parseInt(videographyBudget);
+    }
+
+    if(entertainmentBudget != null){
+        totalBudget += parseInt(entertainmentBudget);
+    }
+
     var newEvent = new Event({
         eventName: eventName,
         startDate: startDate,
@@ -167,6 +179,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
+        totalBudget: totalBudget,
         entertainmentBudget: entertainmentBudget,
         guestCount: guestCount,
         eventSpaceLocation: eventSpaceLocation,
@@ -186,7 +199,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
             photographyBudget,
             videographyBudget,
             entertainmentBudget,
-            
+            totalBudget,
         });
     } else {
         newEvent.save()
@@ -257,9 +270,9 @@ router.post('/updateEvent/:id', function(req, res, next) {
         endDate, venueName, venueCity,
          venueState, guestCount, eventSpaceLocation,extraDetailForm, 
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
-    
     const {photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
+    var totalBudget = 0;
 
     startDate = addDate(startDate);
     var startDateDisplay = dateFormat(startDate,"mmmm dS yyyy");
@@ -308,8 +321,18 @@ router.post('/updateEvent/:id', function(req, res, next) {
         }
         vendorServiceList.push("Entertainment");
     }
+    
+    if(photographyBudget != null){
+        totalBudget += parseInt(photographyBudget);
+    }
 
+    if(videographyBudget != null){
+        totalBudget += parseInt(videographyBudget);
+    }
 
+    if(entertainmentBudget != null){
+        totalBudget += parseInt(entertainmentBudget);
+    }
 
     var information = {
         eventName: eventName,
@@ -326,6 +349,7 @@ router.post('/updateEvent/:id', function(req, res, next) {
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
         entertainmentBudget: entertainmentBudget,
+        totalBudget: totalBudget,
         guestCount: guestCount,
         eventSpaceLocation: eventSpaceLocation,
         extraDetailForm: extraDetailForm
@@ -480,6 +504,166 @@ router.get('/marketplace/entertainment', ensureAuthenticated, (req, res) =>{
         }
     }
 
+});
+
+//sort budget from lowest to highest
+router.get('/marketplace/low-high', ensureAuthenticated, (req, res) =>{
+
+    const userType = req.user.userType;
+
+    if(userType=="vendor"){
+        const vendorServiceList = req.user.vendorServiceList;
+        
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({totalBudget: 1}).exec(function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({totalBudget: 1}).exec(function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
+    }
+});
+
+//sort budget from highest to lowest
+router.get('/marketplace/high-low', ensureAuthenticated, (req, res) =>{
+
+    const userType = req.user.userType;
+
+    if(userType=="vendor"){
+        const vendorServiceList = req.user.vendorServiceList;
+        
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({totalBudget: -1}).exec(function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({totalBudget: -1}).exec(function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
+    }
+});
+
+//sort for nearest start date
+router.get('/marketplace/nearest', ensureAuthenticated, (req, res) =>{
+
+    const userType = req.user.userType;
+
+    if(userType=="vendor"){
+        const vendorServiceList = req.user.vendorServiceList;
+        
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({startDate: 1}).exec(function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({startDate: 1}).exec(function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
+    }
+});
+
+//sort for furthest start date
+router.get('/marketplace/furthest', ensureAuthenticated, (req, res) =>{
+
+    const userType = req.user.userType;
+
+    if(userType=="vendor"){
+        const vendorServiceList = req.user.vendorServiceList;
+        
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({startDate: -1}).exec(function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        // req.flash('no_results', 'Event not found');
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({startDate: -1}).exec(function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
+    }
 });
 
 function escapeRegex(text) {

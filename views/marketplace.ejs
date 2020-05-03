@@ -32,10 +32,10 @@
                           Sort by
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="#">Budget Low to High</a>
-                          <a class="dropdown-item" href="#">Budget High to Low</a>
-                          <a class="dropdown-item" href="#">Closest Date</a>
-                          <a class="dropdown-item" href="#">Farthest Date</a>
+                          <a class="dropdown-item" href="/marketplace/low-high">Budget Low to High</a>
+                          <a class="dropdown-item" href="/marketplace/high-low">Budget High to Low</a>
+                          <a class="dropdown-item" href="/marketplace/nearest">Closest Date</a>
+                          <a class="dropdown-item" href="/marketplace/furthest">Farthest Date</a>
                         </div>
                       </li>
                   </ul>
@@ -71,7 +71,7 @@
                 <% }); %> 
             </div>
             <div class="col-md-1">
-                <h5>$<%= event.photographyBudget + event.videographyBudget + event.entertainmentBudget%></h5>
+                <h5>$<%= event.totalBudget%></h5>
             </div>
             <div class="col-md-2">
               <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">View   </a>
