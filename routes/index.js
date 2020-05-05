@@ -383,22 +383,30 @@ router.get('/view/:id', function(req, res){
 
 });
 
-//Filter for photography
-router.get('/marketplace/photography', ensureAuthenticated, (req, res) =>{
+//Filter
+router.get('/filter/:filterBy', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
+    var myFilter = null; 
+
+    if(req.params.filterBy == "photography"){
+        myFilter = ["Photography"];
+    }else if(req.params.filterBy == "videography"){
+        myFilter = ["Videography"];
+    }else if(req.params.filterBy == "entertainment"){
+        myFilter = ["Entertainment"];
+    }
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
         
         if(req.query.search){
             const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Photography"] }}]}, function(err, eventList){
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: myFilter }}]}, function(err, eventList){
                 if(err){
                     console.log(err);
                 } else {
                     if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
                         console.log("No Event Found");
                         res.redirect('/dashboard');
                     }else{
@@ -409,7 +417,7 @@ router.get('/marketplace/photography', ensureAuthenticated, (req, res) =>{
                 }
             });
         }else{
-            Event.find({vendorServiceList: { $in: ["Photography"] }},{},function(err,eventList){
+            Event.find({vendorServiceList: { $in: myFilter }},function(err,eventList){
                 if(err){
                     console.log("Error recieving the user list of events");
                     console.log(err);
@@ -424,63 +432,32 @@ router.get('/marketplace/photography', ensureAuthenticated, (req, res) =>{
 
 });
 
-//filter for videography
-router.get('/marketplace/videography', ensureAuthenticated, (req, res) =>{
+//sorting
+router.get('/sort/:sortBy', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
+    var mySort = null;
 
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-        
-        if(req.query.search){
-            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Videography"] }}]}, function(err, eventList){
-                if(err){
-                    console.log(err);
-                } else {
-                    if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
-                        console.log("No Event Found");
-                        res.redirect('/dashboard');
-                    }else{
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
-                    }
-                }
-            });
-        }else{
-            Event.find({vendorServiceList: { $in: ["Videography"] }},{},function(err,eventList){
-                if(err){
-                    console.log("Error recieving the user list of events");
-                    console.log(err);
-                } else {
-                    res.render('marketplace', 
-                    {eventList: eventList,
-                    }); 
-                }
-            });
-        }
+    if (req.params.sortBy == "low"){
+        mySort = {totalBudget: 1};
+    }else if(req.params.sortBy == "high"){
+        mySort = {totalBudget: -1};
+    }else if(req.params.sortBy == "nearest"){
+        mySort = {startDate: 1};
+    }else if(req.params.sortBy == "furthest"){
+        mySort = {startDate: -1};
     }
 
-});
-
-//filter for entertainment
-router.get('/marketplace/entertainment', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
         
         if(req.query.search){
             const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: ["Entertainment"] }}]}, function(err, eventList){
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort(mySort).exec(function(err, eventList){
                 if(err){
                     console.log(err);
                 } else {
                     if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
                         console.log("No Event Found");
                         res.redirect('/dashboard');
                     }else{
@@ -491,168 +468,7 @@ router.get('/marketplace/entertainment', ensureAuthenticated, (req, res) =>{
                 }
             });
         }else{
-            Event.find({vendorServiceList: { $in: ["Entertainment"] }},{},function(err,eventList){
-                if(err){
-                    console.log("Error recieving the user list of events");
-                    console.log(err);
-                } else {
-                    res.render('marketplace', 
-                    {eventList: eventList,
-                    }); 
-                }
-            });
-        }
-    }
-
-});
-
-//sort budget from lowest to highest
-router.get('/marketplace/low-high', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-        
-        if(req.query.search){
-            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({totalBudget: 1}).exec(function(err, eventList){
-                if(err){
-                    console.log(err);
-                } else {
-                    if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
-                        console.log("No Event Found");
-                        res.redirect('/dashboard');
-                    }else{
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
-                    }
-                }
-            });
-        }else{
-            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({totalBudget: 1}).exec(function(err,eventList){
-                if(err){
-                    console.log("Error recieving the user list of events");
-                    console.log(err);
-                } else {
-                    res.render('marketplace', 
-                    {eventList: eventList,
-                    }); 
-                }
-            });
-        }
-    }
-});
-
-//sort budget from highest to lowest
-router.get('/marketplace/high-low', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-        
-        if(req.query.search){
-            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({totalBudget: -1}).exec(function(err, eventList){
-                if(err){
-                    console.log(err);
-                } else {
-                    if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
-                        console.log("No Event Found");
-                        res.redirect('/dashboard');
-                    }else{
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
-                    }
-                }
-            });
-        }else{
-            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({totalBudget: -1}).exec(function(err,eventList){
-                if(err){
-                    console.log("Error recieving the user list of events");
-                    console.log(err);
-                } else {
-                    res.render('marketplace', 
-                    {eventList: eventList,
-                    }); 
-                }
-            });
-        }
-    }
-});
-
-//sort for nearest start date
-router.get('/marketplace/nearest', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-        
-        if(req.query.search){
-            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({startDate: 1}).exec(function(err, eventList){
-                if(err){
-                    console.log(err);
-                } else {
-                    if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
-                        console.log("No Event Found");
-                        res.redirect('/dashboard');
-                    }else{
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
-                    }
-                }
-            });
-        }else{
-            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({startDate: 1}).exec(function(err,eventList){
-                if(err){
-                    console.log("Error recieving the user list of events");
-                    console.log(err);
-                } else {
-                    res.render('marketplace', 
-                    {eventList: eventList,
-                    }); 
-                }
-            });
-        }
-    }
-});
-
-//sort for furthest start date
-router.get('/marketplace/furthest', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-        
-        if(req.query.search){
-            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort({startDate: -1}).exec(function(err, eventList){
-                if(err){
-                    console.log(err);
-                } else {
-                    if(eventList.length < 1) {
-                        // req.flash('no_results', 'Event not found');
-                        console.log("No Event Found");
-                        res.redirect('/dashboard');
-                    }else{
-                        res.render('marketplace',
-                        {eventList: eventList,
-                        });
-                    }
-                }
-            });
-        }else{
-            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort({startDate: -1}).exec(function(err,eventList){
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort(mySort).exec(function(err,eventList){
                 if(err){
                     console.log("Error recieving the user list of events");
                     console.log(err);
