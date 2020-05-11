@@ -22,26 +22,54 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
     var userEmail = req.user.email;
     const userType = req.user.userType;
 
-
-
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-       
+        
+            if(req.query.search){
 
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace', {
-                    eventList: eventList,
+                const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+                Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}, function(err, eventList){
+                    if(err){
+                        console.log(err);
+                    } else {
+                        if(eventList.length < 1) {
+                            // req.flash('no_results', 'Event not found');
+                            console.log("No Event Found");
+                            res.redirect('/dashboard');
+                        }else{
+                            res.render('marketplace',
+                            {eventList: eventList,
+                            });
+                        }
+                    }
+                });
+            }else{
+                Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
+                    if(err){
+                        console.log("Error recieving the user list of events");
+                        console.log(err);
+                    } else {
+                        res.render('marketplace', 
+                        {eventList: eventList,
+                        }); 
+                    }
                 });
             }
-        });
+ 
+        // Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
 
+        //     if(err){
+        //         console.log("Error recieving the user list of events");
+        //         console.log(err);
+        //     } else {
+                // console.log(eventList);
+                // res.render('marketplace', {
+                //     eventList: eventList,
+                // });
+        //     }
         
+        // });
+
     } else {
         Event.find({userEmail: userEmail},{},function(err,eventList){
             if(err){
@@ -74,7 +102,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
     const {eventLength, photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
-    
+    var totalBudget = 0;
 
     var startDateDisplay = dateFormat(addDate(startDate),"mmmm dS yyyy");
 
@@ -125,6 +153,18 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList.push("Entertainment");
     }
 
+    if(photographyBudget != null){
+        totalBudget += parseInt(photographyBudget);
+    }
+
+    if(videographyBudget != null){
+        totalBudget += parseInt(videographyBudget);
+    }
+
+    if(entertainmentBudget != null){
+        totalBudget += parseInt(entertainmentBudget);
+    }
+
     var newEvent = new Event({
         eventName: eventName,
         startDate: startDate,
@@ -139,6 +179,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         vendorServiceList: vendorServiceList,
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
+        totalBudget: totalBudget,
         entertainmentBudget: entertainmentBudget,
         guestCount: guestCount,
         eventSpaceLocation: eventSpaceLocation,
@@ -158,7 +199,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
             photographyBudget,
             videographyBudget,
             entertainmentBudget,
-            
+            totalBudget,
         });
     } else {
         newEvent.save()
@@ -229,9 +270,9 @@ router.post('/updateEvent/:id', function(req, res, next) {
         endDate, venueName, venueCity,
          venueState, guestCount, eventSpaceLocation,extraDetailForm, 
          photographyBudget, videographyBudget, entertainmentBudget} = req.body;
-    
     const {photographerCB,videographerCB,entertainmentCB} = req.body;
     var userEmail = req.user.email;
+    var totalBudget = 0;
 
     startDate = addDate(startDate);
     var startDateDisplay = dateFormat(startDate,"mmmm dS yyyy");
@@ -244,9 +285,6 @@ router.post('/updateEvent/:id', function(req, res, next) {
         var endDateDisplay = null;
 
     }
-
-
-
 
     var vendorServiceList = [];
     //remove any values for budget that is selected as no
@@ -283,8 +321,18 @@ router.post('/updateEvent/:id', function(req, res, next) {
         }
         vendorServiceList.push("Entertainment");
     }
+    
+    if(photographyBudget != null){
+        totalBudget += parseInt(photographyBudget);
+    }
 
+    if(videographyBudget != null){
+        totalBudget += parseInt(videographyBudget);
+    }
 
+    if(entertainmentBudget != null){
+        totalBudget += parseInt(entertainmentBudget);
+    }
 
     var information = {
         eventName: eventName,
@@ -301,6 +349,7 @@ router.post('/updateEvent/:id', function(req, res, next) {
         photographyBudget: photographyBudget,
         videographyBudget: videographyBudget,
         entertainmentBudget: entertainmentBudget,
+        totalBudget: totalBudget,
         guestCount: guestCount,
         eventSpaceLocation: eventSpaceLocation,
         extraDetailForm: extraDetailForm
@@ -334,82 +383,108 @@ router.get('/view/:id', function(req, res){
 
 });
 
-//Filter for photography
-router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
+//Filter
+router.get('/filter/:filterBy', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
+    var myFilter = null; 
+
+    if(req.params.filterBy == "photography"){
+        myFilter = ["Photography"];
+    }else if(req.params.filterBy == "videography"){
+        myFilter = ["Videography"];
+    }else if(req.params.filterBy == "entertainment"){
+        myFilter = ["Entertainment"];
+    }
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-photography', {
-                    eventList: eventList,
-                });
-            }
-
-
-        });
         
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: { $in: myFilter }}]}, function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: { $in: myFilter }},function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
     }
 
 });
 
-//filtre for videography
-router.get('/marketplace-videography', ensureAuthenticated, (req, res) =>{
+//sorting
+router.get('/sort/:sortBy', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
+    var mySort = null;
+
+    if (req.params.sortBy == "low"){
+        mySort = {totalBudget: 1};
+    }else if(req.params.sortBy == "high"){
+        mySort = {totalBudget: -1};
+    }else if(req.params.sortBy == "nearest"){
+        mySort = {startDate: 1};
+    }else if(req.params.sortBy == "furthest"){
+        mySort = {startDate: -1};
+    }
 
     if(userType=="vendor"){
         const vendorServiceList = req.user.vendorServiceList;
-
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-videography', {
-                    eventList: eventList,
-                });
-            }
-        });
         
+        if(req.query.search){
+            const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+            Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}).sort(mySort).exec(function(err, eventList){
+                if(err){
+                    console.log(err);
+                } else {
+                    if(eventList.length < 1) {
+                        console.log("No Event Found");
+                        res.redirect('/dashboard');
+                    }else{
+                        res.render('marketplace',
+                        {eventList: eventList,
+                        });
+                    }
+                }
+            });
+        }else{
+            Event.find({vendorServiceList: {$in:vendorServiceList}}).sort(mySort).exec(function(err,eventList){
+                if(err){
+                    console.log("Error recieving the user list of events");
+                    console.log(err);
+                } else {
+                    res.render('marketplace', 
+                    {eventList: eventList,
+                    }); 
+                }
+            });
+        }
     }
-
 });
 
-//filtre for entertainment
-router.get('/marketplace-entertainment', ensureAuthenticated, (req, res) =>{
-
-    const userType = req.user.userType;
-
-    if(userType=="vendor"){
-        const vendorServiceList = req.user.vendorServiceList;
-  
-
-        Event.find({vendorServiceList: {$in:vendorServiceList}},{},function(err,eventList){
-            if(err){
-                console.log("Error recieving the user list of events");
-                console.log(err);
-            } else {
-                // console.log(eventList);
-                res.render('marketplace-entertainment', {
-                    eventList: eventList,
-                });
-            }
-        });
-        
-    }
-
-});
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;
 

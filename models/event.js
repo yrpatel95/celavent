@@ -60,6 +60,10 @@ const EventSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
+    totalBudget: {
+        type: Number,
+        required: false
+    },
     guestCount: {
         type: Number,
         required:true
