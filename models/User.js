@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
     vendorServiceList:{
         type: Array,
         required: false
+    },
+    vendorBidList: {
+        type: Array,
+        required: false
     }
 });
 

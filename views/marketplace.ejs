@@ -54,13 +54,13 @@
     <br>
     <% eventList.forEach(function(event){ %>
         <div class="row sk-package">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <h5><%=event.eventName%></h5>
             </div>
             <div class="col-md-2">
                 <h7><%=event.venueCity%>, <%=event.venueState%></h7>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <h7><%=event.startDateDisplay%></h7>
                 <br>
                 <h7><%=event.endDateDisplay%></h7>
@@ -75,7 +75,7 @@
             </div>
             <div class="col-md-2">
               <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">View   </a>
-              <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">Bid   </a>
+              <a class="btn btn-light btn-block mb-1" href='/bid/<%=event.id%>' role="button">Bid   </a>
               
           </div>
         </div>

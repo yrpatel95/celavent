@@ -23,42 +23,17 @@
                         <li class="list-group-item">
                             <h4 class="card-title"><%=clients.eventName%></h4>
                         </li>
-
-                        <!-- <li class="list-group-item"><%=clients.venueName%></li>
-                        <li class="list-group-item"><%=clients.venueCity%>,<%=clients.venueState%></li>
-                        
-                        <li class="list-group-item">Start: <%=clients.startDate%></li>
-                        <% if(clients.eventLength == "multiDay"){ %>
-                            <li class="list-group-item" id="endDate">End: <%=clients.endDate%></li>
-                            <li class="list-group-item" id="eventLength">Multi-Day Event</li>
-                        <% } else {%>
-                            <li class="list-group-item" id="eventLength">Single Day Event</li>
-                        <% }%>   
-                        <% if(clients.photographyBudget != null){ %>
-                            <li class="list-group-item" id="photographyBudget">Photography: $<%=clients.photographyBudget%></li>
-                        <% } %>
-                        <% if(clients.videographyBudget != null){ %>
-                            <li class="list-group-item" id="videographyBudget">Videograhpy: $<%=clients.videographyBudget%></li>
-                        <% } %>
-                        <% if(clients.entertainmentBudget != null){ %>
-                            <li class="list-group-item" id="entertainmentBudget">Entertainment: $<%=clients.entertainmentBudget%></li>
-                        <% } %> -->
-
                         
                         <li class="list-group-item">
                             <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
                             <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
                         </li>
-                        <li class="list-group-item"><a class="btn btn-light" role="button">See Vendor</a></li>
+                        <li class="list-group-item" >
+                            <a class="btn btn-light" href='eventBid/<%=clients.id%>' role="button">See Vendor</a>
+                        </li>
                     </ul>
                 </div>
-                <!-- 
-                    <div class="card-body" style="text-align:center">
-                        <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">Update Event</a>
-                        <a class="btn btn-light" href='deleteEvent/<%=clients.id%>' role="button">Delete Event</a>
-                        <a class="btn btn-light" href='updateEvent/<%=clients.id%>' role="button">See Vendors</a>
-                    </div>
-                 -->
+                
             </div>
         </div>
         <% }); %>

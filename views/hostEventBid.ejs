@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row text-center col-md-12" style="display:flex; flex-wrap:wrap;">
+
+        
+    
+        <div class="kpi">
+            <div class="media d-flex">
+                <div class="align-self-center">
+                  <i class="icon-pencil primary font-large-2 float-left"></i>
+                </div>
+                <div class="media-body text-center">
+                  <h3 class="card-body-text">$<%= photographyAvg %></h3>
+                  <span class="card-body-text">Average Photography Bid</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi">
+            <div class="media d-flex">
+                <div class="align-self-center">
+                  <i class="icon-pencil primary font-large-2 float-left"></i>
+                </div>
+                <div class="media-body text-center">
+                  <h3 class="card-body-text">$<%= videographyAvg %></h3>
+                  <span class="card-body-text"> Average Videography Bid</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi">
+            <div class="media d-flex">
+                <div class="align-self-center">
+                  <i class="icon-pencil primary font-large-2 float-left"></i>
+                </div>
+                <div class="media-body text-center">
+                  <h3 class="card-body-text">$<%= entertainmentAvg %></h3>
+                  <span class="card-body-text">Average Entertainment Bid</span>
+                </div>
+            </div>
+        </div>
+               
+    </div>
+
+    <% vendorBidList.forEach(function(vendor){ %>
+      <div class="row sk-package col-md-12">
+          <div class="col-md-2">
+              <h5><%= vendor.vendorName %></h5>
+          </div>
+          <div class="col-md-2">
+              <h7>Photography: $<%= vendor.videographyBid %></h7>
+          </div>
+          <div class="col-md-2">
+              <h7>Videograhy: $<%= vendor.photographyBid %></h7>
+          </div>
+          <div class="col-md-3">
+              <h7>Entertainment: $<%= vendor.entertainmentBid %></h7>
+          </div>
+          
+          <div class="col-md-2">
+            <a class="btn btn-light btn-block mb-1" href='/view/' role="button">View</a>
+            <a class="btn btn-light btn-block mb-1" href='/bid/' role="button">Accept Bid</a>
+            
+        </div>
+      </div>
+      <br>
+
+    <% }); %>
+</div>

@@ -172,7 +172,7 @@
                         </div>
                         <div class="col-sm-2 hostBudget">
                             <label class="switch">
-                                <% if(event.entertainmentCB != null){ %>
+                                <% if(event.entertainmentBudget != null){ %>
                                     <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="Yes" checked/>
                                 <% } else { %>
                                     <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" value="No"/>
@@ -183,7 +183,7 @@
                             </label>
                         </div>
                         <div class="col-sm-8 hostBudget">
-                            <% if(event.entertainmentCB != null){ %>
+                            <% if(event.entertainmentBudget != null){ %>
                                 <input class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" value="<%= event.entertainmentBudget %>">
                             <% } else { %>
                                 <input style="display:none" class="form-control" type="number" placeholder="Budget" name="entertainmentBudget" id="entertainmentBudget" >
@@ -203,7 +203,7 @@
                 <div class="form-group">
                     <a class="btn btn-light btn-med btn-block" href="/dashboard">Go Back</a>
                 </div>
-            <!-- </form> -->
+            </form>
         </div>
     </div>
 </div>
@@ -227,8 +227,6 @@ $(document).ready(function(){
     var elem = $("#videographerCB");
     var elem = $("#djCB");
 
-   
-    
     
     $("#photographerCB").click(function(){
       $( "#photographyBudget" ).slideToggle("fast");

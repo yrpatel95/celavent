@@ -69,11 +69,11 @@
         <% if( event.videographyBudget > 0){ %>
             <p><strong>Videography: </strong>$<%= event.videographyBudget %></p>
         <% } %>
-        <% if( event.videographyBudget > 0){ %>
+        <% if( event.entertainmentBudget != null){ %>
             <p><strong>Entertainment: </strong>$<%= event.entertainmentBudget %></p>
         <% } %>
 
-        <a class="btn btn-light btn-block mb-1" href='/view/<%=event.id%>' role="button">Bid   </a>
+        <a class="btn btn-light btn-block mb-1" href='/bid/<%=event.id%>' role="button">Bid   </a>
       </div>
   
     </div>
@@ -89,3 +89,6 @@
 
   
   </div>
+
+
+  
