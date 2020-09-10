@@ -75,6 +75,10 @@ const EventSchema = new mongoose.Schema({
     extraDetailForm: {
         type: String,
         required:false
+    },
+    vendorBidList: {
+        type: Array,
+        required: false
     }
 
 });

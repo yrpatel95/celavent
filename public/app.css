@@ -285,6 +285,39 @@ label {
 	padding-top: 2px;
 }
 
+.serviceLabel{
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    align-content: center;
+}
+
+.serviceToggle{
+	padding-top: 10px;
+	line-height: 50px;
+	align-content: center;
+	width: 20px;
+}
+
+.serviceAmount{
+	padding-top: 6px;
+}
+
+.kpi {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+	padding: 1.5rem;
+	margin: 50px 10px 10px auto;
+	background-color: #222;
+}
+
+.card-body-text{
+	color: #FF7F15;
+}
+
 
 
 

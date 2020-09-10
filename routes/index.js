@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Event = require('../models/event');
+const User = require('../models/User');
 const dateFormat = require('dateformat');
 var { addDate } =  require('../config/date');
 var ObjectId = require('mongodb').ObjectID;
@@ -183,7 +184,8 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
         entertainmentBudget: entertainmentBudget,
         guestCount: guestCount,
         eventSpaceLocation: eventSpaceLocation,
-        extraDetailForm: extraDetailForm
+        extraDetailForm: extraDetailForm,
+        vendorBidList: {}
 
     });
 
@@ -351,8 +353,7 @@ router.post('/updateEvent/:id', function(req, res, next) {
         entertainmentBudget: entertainmentBudget,
         totalBudget: totalBudget,
         guestCount: guestCount,
-        eventSpaceLocation: eventSpaceLocation,
-        extraDetailForm: extraDetailForm
+        eventSpaceLocation: eventSpaceLocation
     };
 
     Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
@@ -383,8 +384,86 @@ router.get('/view/:id', function(req, res){
 
 });
 
-//Filter
-router.get('/filter/:filterBy', ensureAuthenticated, (req, res) =>{
+
+//View for bids from the vendor side
+router.get('/bid/:id', function(req, res){
+    const userEmail = req.user.email;
+    var id = req.params.id;
+    var userProfile;
+    //console.log(userEmail);
+    User.find({"email" : userEmail}, {}, function(err,user){
+        if(err){
+            console.log("Error recieving the user data");
+            console.log(err);
+        } else { 
+            userProfile = user[0];
+            Event.find({"_id" : ObjectId(id)},{},function(err,event){
+        
+                if(err){
+                    console.log("Error recieving the event data");
+                    console.log(err);
+                } else { 
+                    res.render('bid', {
+                        event: event[0],
+                        userProfile: userProfile
+                    })
+                }
+            });  
+        }
+    });
+});
+
+//get the bid and add it to the event and vendors tables to keep record of it
+
+router.post('/bid/:id', function(req, res, next) {
+
+    var id = req.params.id;
+    
+    var {vendorName,vendorPhoneNumber,vendorEmail,vendorWebsite,photographerCB,photographyBid,
+            videographerCB,videographyBid,entertainmentCB,entertainmentBid,serviceDetailForm} = req.body;
+
+    if(photographerCB!= "on"){
+        photographyBid = 0;
+    }
+
+    if(videographerCB!= "on"){
+        videographyBid = 0;
+    }
+    
+    if(entertainmentCB!= "on"){
+        entertainmentBid = 0;
+    }
+    
+
+    var bidOffer = {
+        vendorName: vendorName,
+        vendorPhoneNumber: vendorPhoneNumber,
+        vendorEmail: vendorEmail,
+        vendorWebsite: vendorWebsite,
+        photographyBid: Number(photographyBid),
+        videographyBid: Number(videographyBid),
+        entertainmentBid: Number(entertainmentBid),
+        serviceDetailForm: serviceDetailForm
+    };
+
+    Event.updateOne( { "_id" : ObjectId(id) }, {$push: {vendorBidList:bidOffer}} , function(err, collection){
+        if(err){
+            console.log("Error Updating Information");
+            console.log(err);
+        }else {
+            res.redirect('/dashboard');
+        }
+    }); 
+
+
+
+    
+   
+    
+});
+
+//Filter for photography
+router.get('/marketplace-photography', ensureAuthenticated, (req, res) =>{
 
     const userType = req.user.userType;
     var myFilter = null; 
@@ -482,9 +561,59 @@ router.get('/sort/:sortBy', ensureAuthenticated, (req, res) =>{
     }
 });
 
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
+router.get('/eventBid/:id', function(req, res, next) {
+    
+    var id = req.params.id;
+  
+
+    Event.find({"_id" : ObjectId(id)},{},function(err,event){
+
+
+        
+        if(err){
+            console.log("Error recieving the user list of events");
+            console.log(err);
+        } else {
+            const vendorBidList = event[0].vendorBidList;
+            const arrAvg = arr => (arr.reduce((a,b) => a + b, 0) / arr.length).toFixed(0)
+            
+            var photographyArr = []
+            var videographyArr = []
+            var entertainmentArr = []
+            vendorBidList.forEach(function(vendor){
+                if(vendor.photographyBid != null && vendor.photographyBid > 0){
+                    photographyArr.push(vendor.photographyBid);
+                }
+                
+                if(vendor.videographyBid != null && vendor.videographyBid > 0){
+                    videographyArr.push(vendor.videographyBid);
+                }
+
+                if(vendor.entertainmentBid != null && vendor.entertainmentBid > 0){
+                    entertainmentArr.push(vendor.entertainmentBid);
+                }
+            });
+
+            
+            res.render('hostEventBid', {
+                vendorBidList: vendorBidList,
+                photographyAvg: arrAvg(photographyArr),
+                videographyAvg: arrAvg(videographyArr),
+                entertainmentAvg: arrAvg(entertainmentArr)
+
+            })
+        
+        }
+    });  
+
+});
+
+
+
+
+
+
+
 
 module.exports = router;
 

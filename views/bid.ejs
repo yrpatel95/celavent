@@ -1,0 +1,141 @@
+<br/>
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Portfolio Item Heading -->
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="my-4"><%= event.eventName %></h1>
+        </div>
+    </div>
+    
+  
+    <form action="/bid/" method="POST">
+        
+        <div class="row">
+            <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Vendor Name" name="vendorName" required> 
+            </div>
+            <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Vendor Phone Number" name="vendorPhoneNumber" required>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Vendor Email" name="vendorEmail" value= <%= userProfile.email%> required>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Vendor Website" name="vendorWebsite">
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+        
+                <br>
+                <div class="row">
+
+                    <% if(userProfile.vendorServiceList.includes("Photography") && event.vendorServiceList.includes("Photography")){ %>
+                        <div class="col-sm-2 serviceLabel">
+                            <label>Photography</label>
+                        </div>
+                        <div class="col-sm-2 serviceToggle">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="photographerCB" name="photographerCB" checked>
+                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div>
+                        
+                        <div class="col-sm-4 serviceAmount">
+                            <input class="form-control" type="number" placeholder="Bid Amount" name="photographyBid" id="photographyBid">
+                        </div>
+                        <div class="col-sm-4 serviceLabel">
+                            <label>Budget For Service: $<%= event.photographyBudget %></label>
+                        </div>
+                    <% } %>
+
+                    <% if(userProfile.vendorServiceList.includes("Videography") && event.vendorServiceList.includes("Videography")){ %>
+                        <div class="col-sm-2 serviceLabel">
+                            <label>Videography</label>
+                        </div>
+                        <div class="col-sm-2 serviceToggle">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="videographerCB" name="videographerCB" checked/>
+                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div>
+                        
+                        <div class="col-sm-4 serviceAmount">
+                            <input class="form-control" type="number" placeholder="Bid Amount" name="videographyBid" id="videographyBid" >
+                        </div>
+                        <div class="col-sm-4 serviceLabel">
+                            <label>Budget For Service: $<%= event.videographyBudget %></label>
+                        </div>
+                    <% } %>
+
+                    <% if(userProfile.vendorServiceList.includes("Entertainment") && event.vendorServiceList.includes("Entertainment")){ %>
+                        <div class="col-sm-2 serviceLabel">
+                            <label>Entertainment</label>
+                        </div>
+                        <div class="col-sm-2 serviceToggle">
+                            <label class="switch">
+                                <input class="switch-input" type="checkbox" id="entertainmentCB" name="entertainmentCB" checked/>
+                                <span class="switch-label" data-on="Yes" data-off="No" ></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                        </div> 
+                        <div class="col-sm-4 serviceAmount">
+                            <input class="form-control" type="number" placeholder="Bid Amount" name="entertainmentBid" id="entertainmentBid" >
+                        </div>
+                        <div class="col-sm-4 serviceLabel">
+                            <label>Budget For Service: $<%= event.entertainmentBudget %></label>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="extraDetailForm">Service Specific Details</label>
+                <textarea class="form-control" name="serviceDetailForm" id="serviceDetailForm" rows="6"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-light btn-med btn-block">Submit</button>
+                <a class="btn btn-light btn-med btn-block" href="/dashboard">Go Back</a>
+            </div>
+        </div>
+
+        
+    </form>
+    
+  
+
+  
+  </div>
+
+
+<script>
+    
+    $(document).ready(function(){
+        var elem = $("#photographerCB");
+        var elem = $("#videographerCB");
+        var elem = $("#entertainmentCB");
+    
+        
+        $("#photographerCB").click(function(){
+          $( "#photographyBid" ).slideToggle("fast");
+        });
+        $("#videographerCB").click(function(){
+          $( "#videographyBid" ).slideToggle("fast");
+        });
+        $("#entertainmentCB").click(function(){
+          $( "#entertainmentBid" ).slideToggle("fast");
+        });
+    });
+</script>
