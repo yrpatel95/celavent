@@ -28,7 +28,7 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
         
             if(req.query.search){
 
-                const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+                const regex = new RegExp(escape(req.query.search), 'gi');
                 Event.find({$and: [{"eventName": regex}, {vendorServiceList: {$in:vendorServiceList}}]}, function(err, eventList){
                     if(err){
                         console.log(err);
