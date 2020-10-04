@@ -17,8 +17,6 @@ router.post('/register', (req, res)=> {
     var {name, email, password, password2, userType, vendorServiceList} = req.body;
     let errors = [];
 
-    
-
 
     //check required fields
     if(!name || !email || !password || !password2){
@@ -121,7 +119,6 @@ router.post('/login', (req,res, next) => {
         failureFlash : true
     })(req, res, next);
 });
-
 
 //Logout Handle
 router.get('/logout', (req, res) =>{

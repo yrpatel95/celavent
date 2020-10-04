@@ -137,14 +137,12 @@
                                 <span class="switch-handle"></span> 
                             </label>
                         </div>
-                        
                         <div class="col-sm-8 hostBudget">
                             <% if(event.photographyBudget != null){ %>
                                 <input class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget" value="<%= event.photographyBudget %>">
                             <% } else { %>
                                 <input style="display:none" class="form-control" type="number" placeholder="Budget" name="photographyBudget" id="photographyBudget">
-                            <% } %>
-                            
+                            <% } %> 
                         </div>
                         <div class="col-sm-2">
                             <label>Videography</label>
@@ -208,10 +206,7 @@
     </div>
 </div>
 
-
 <script>
-
-
 
 function myFunction() {
   var endDate = document.getElementById("endDate");

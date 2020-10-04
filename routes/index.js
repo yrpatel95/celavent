@@ -6,8 +6,7 @@ const dateFormat = require('dateformat');
 var { addDate } =  require('../config/date');
 var ObjectId = require('mongodb').ObjectID;
 const { ensureAuthenticated } = require('../config/auth');
-
-
+const { render } = require("ejs");
 
 // Welcome Page
 router.get('/', (req, res) => res.render('home'));
@@ -214,7 +213,7 @@ router.post('/newEvent', ensureAuthenticated, (req, res) => {
 
 });
 
-router.get('/deleteEvent/:id', function(req, res, next) {
+router.get('/deleteEvent/:id', function(req, res) {
     var id = req.params.id;
   
 
@@ -231,7 +230,67 @@ router.get('/deleteEvent/:id', function(req, res, next) {
 
 });
 
-router.get('/updateEvent/:id', function(req, res, next) {
+router.get('/editProfile', ensureAuthenticated, function(req, res){
+
+    var userEmail = req.user.email;
+    var userName = req.user.name;
+    var userType = req.user.userType; 
+    var vendorServiceList = req.user.vendorServiceList;
+
+    res.render("editProfile", {
+        email: userEmail,
+        name: userName,
+        userType: userType,
+        vendorServiceList: vendorServiceList
+    });
+
+});
+
+router.post('/editProfile', ensureAuthenticated, function(req, res){
+
+    User.findById(req.user.id, function (err, user){
+
+        if(!user){
+            errors.push({msg:"User not found!"});
+            return res.redirect('/editProfile')
+        }
+
+        var userEmail = req.body.email;
+        var userName = req.body.name;
+        var userType = req.body.userType; 
+        var vendorServiceList = req.body.vendorServiceList;
+
+        if(!userName || !userEmail){
+            //|| !password || !password2
+            errors.push({
+                msg: "Please fill in all fields"
+            });
+        }
+
+        if(userType!= "Host"){
+            userType = "vendor";
+        } else {
+            userType = "host";
+        }
+
+        user.email = userEmail;
+        user.name = userName;
+        user.userType = userType;
+        user.vendorServiceList = vendorServiceList;
+
+        user.save(function(err){
+            if(err){
+                console.log("Error Updating Information");
+                console.log(err);
+            }else{
+                res.redirect('/dashboard')
+            }
+        });
+    });                
+
+});
+
+router.get('/updateEvent/:id', function(req, res) {
     
     var id = req.params.id;
   
@@ -262,11 +321,10 @@ router.get('/updateEvent/:id', function(req, res, next) {
 });
 
 
-router.post('/updateEvent/:id', function(req, res, next) {
+router.post('/updateEvent/:id', function(req, res) {
     
     var id = req.params.id;
     // console.log(id);
-    
 
     var {eventName, startDate, endDate, eventLength,
         endDate, venueName, venueCity,
@@ -285,7 +343,6 @@ router.post('/updateEvent/:id', function(req, res, next) {
     } else {
         endDate = null;
         var endDateDisplay = null;
-
     }
 
     var vendorServiceList = [];
@@ -299,7 +356,6 @@ router.post('/updateEvent/:id', function(req, res, next) {
             });
         }
         vendorServiceList.push("Photography");
-
     }
 
     if(videographerCB == undefined){
@@ -353,7 +409,8 @@ router.post('/updateEvent/:id', function(req, res, next) {
         entertainmentBudget: entertainmentBudget,
         totalBudget: totalBudget,
         guestCount: guestCount,
-        eventSpaceLocation: eventSpaceLocation
+        eventSpaceLocation: eventSpaceLocation,
+        extraDetailForm: extraDetailForm
     };
 
     Event.updateOne( { "_id" : ObjectId(id) }, {$set: information} , function(err, collection){
